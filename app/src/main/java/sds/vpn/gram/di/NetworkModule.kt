@@ -6,6 +6,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sds.vpn.gram.common.Constants
+import sds.vpn.gram.common.MyVpnService
 import sds.vpn.gram.data.remote.VpngramApi
 
 val networkModule = module {
@@ -38,6 +39,10 @@ val networkModule = module {
 
     single {
         provideAPIService(get())
+    }
+
+    single {
+        MyVpnService(get())
     }
 
 }

@@ -1,0 +1,20 @@
+package sds.vpn.gram.data.remote.dto
+
+import com.google.gson.annotations.SerializedName
+
+data class GetVpnConfigResponse(
+    @SerializedName("InterfacePublicKey")
+    val interfacePublicKey: String,
+
+    @SerializedName("InterfacePrivateKey")
+    val interfacePrivateKey: String,
+
+    @SerializedName("addr")
+    val address: String,
+
+    @SerializedName("PeerPublicKey")
+    val peerPublicKey: String,
+
+    @SerializedName("serverPort")
+    val serverPort: Int,
+)

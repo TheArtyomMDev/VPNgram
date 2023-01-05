@@ -3,27 +3,30 @@ package sds.vpn.gram.ui.hometabs.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.spec.DestinationSpec
+import com.ramcosta.composedestinations.spec.Direction
+import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
+import com.ramcosta.composedestinations.utils.destination
 import sds.vpn.gram.R
+import sds.vpn.gram.ui.destinations.CountriesScreenDestination
 import sds.vpn.gram.ui.destinations.DirectionDestination
 import sds.vpn.gram.ui.destinations.HomeScreenDestination
-import sds.vpn.gram.ui.theme.MediumDimen
+import sds.vpn.gram.ui.destinations.PremiumScreenDestination
 import sds.vpn.gram.ui.theme.RootDimen
 
 @Composable
 fun BottomHomeBar(
-    navigator: DestinationsNavigator,
+    navigator: NavController,
     modifier: Modifier
 ) {
-
     Box(
         modifier = modifier
     ) {
@@ -36,10 +39,12 @@ fun BottomHomeBar(
         )
 
         val items = listOf(
-            BottomHomeBarItem.Home, BottomHomeBarItem.Settings, BottomHomeBarItem.Profile
+            BottomHomeBarItem.Home, BottomHomeBarItem.Countries, BottomHomeBarItem.Premium
         )
 
-        var currentDestination: DirectionDestination = HomeScreenDestination
+        val currentDestination = navigator.currentBackStackEntryAsState().value?.destination()
+
+        println(currentDestination)
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.
@@ -54,10 +59,10 @@ fun BottomHomeBar(
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(top = RootDimen * 3, bottom = RootDimen * 1.5F)
+                        .padding(top = RootDimen * 3.4F, bottom = RootDimen * 1.5F)
                         .clickable {
-                            currentDestination = it.destination
-                            navigator.navigate(it.destination)
+                            navigator.navigate(it.destination.baseRoute)
+                            //navigator.navigateTo(it.destination as Direction)
                         }
                 )
             }
@@ -70,9 +75,9 @@ fun BottomHomeBar(
 sealed class BottomHomeBarItem(
     val icon: Int,
     val unselectedIcon: Int,
-    val destination: DirectionDestination,
+    val destination: DestinationSpec<*>,
 ) {
-    object Home : BottomHomeBarItem(R.drawable.logo, R.drawable.logo, HomeScreenDestination)
-    object Settings : BottomHomeBarItem(R.drawable.logo, R.drawable.logo, HomeScreenDestination)
-    object Profile : BottomHomeBarItem(R.drawable.logo, R.drawable.logo, HomeScreenDestination)
+    object Home : BottomHomeBarItem(R.drawable.home_selected, R.drawable.home, HomeScreenDestination)
+    object Countries : BottomHomeBarItem(R.drawable.countries_selected, R.drawable.countries, CountriesScreenDestination)
+    object Premium : BottomHomeBarItem(R.drawable.premium_selected, R.drawable.premium, PremiumScreenDestination)
 }

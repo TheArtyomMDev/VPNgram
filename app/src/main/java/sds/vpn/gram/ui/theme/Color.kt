@@ -2,9 +2,15 @@ package sds.vpn.gram.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Grey80 = Color(0xFFEBEAF0)
-val Grey70 = Color(0xFFC7C7C7)
-val Grey40 = Color(0xFF6F6F6F)
+val Gray90 = Color(0xFFF1F1F5)
+val Gray80 = Color(0xFFEBEAF0)
+val Gray70 = Color(0xFFC7C7C7)
+val Gray40 = Color(0xFF6F6F6F)
+val Gray20 = Color(0xFF3A3A3C)
+
+val Orange50 = Color(0xFFFF543E)
+
+val Purple50 = Color(0xFFC837AB)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

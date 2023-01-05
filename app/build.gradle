@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie-compose:5.2.0'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+    implementation "me.nikhilchaudhari:composeNeumorphism:1.0.0-alpha02"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

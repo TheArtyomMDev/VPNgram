@@ -21,13 +21,13 @@ interface VpngramApi {
     @POST("/mobile/get_traffic_limit")
     suspend fun getTrafficLimit(
         @Query("device_id") deviceId: String,
-    ): Response<String>
+    ): Response<GetTrafficLimitResponse>
 
     @POST("/mobile/get_vpn_config")
     suspend fun getVpnConfig(
         @Query("device_id") deviceId: String,
         @Query("server_id") serverId: String,
-    ): Response<String>
+    ): Response<GetVpnConfigResponse>
 
     @POST("/mobile/check_traffic")
     suspend fun getTrafficSpent(

@@ -1,6 +1,7 @@
 package sds.vpn.gram.data.remote.dto
 
 import sds.vpn.gram.domain.model.Server
+import java.net.URL
 
 data class ServerDto(
     val id: String,
@@ -12,10 +13,13 @@ data class ServerDto(
 )
 
 fun ServerDto.toServer(): Server {
+    val url = URL(this.ip)
+
     return Server(
         serverId = this.id,
         country = this.country,
-        IP = this.ip,
+        IP = url.host,
+        port = url.port,
         imageUrl = this.imageUrl
     )
 }

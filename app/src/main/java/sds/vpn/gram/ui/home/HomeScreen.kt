@@ -1,28 +1,63 @@
 package sds.vpn.gram.ui.home
 
+import android.app.Activity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import me.nikhilchaudhari.library.NeuInsets
+import me.nikhilchaudhari.library.neumorphic
+import me.nikhilchaudhari.library.shapes.Pressed
+import me.nikhilchaudhari.library.shapes.Punched
+import org.koin.androidx.compose.koinViewModel
+import sds.vpn.gram.R
+import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.ui.destinations.CountriesScreenDestination
+import sds.vpn.gram.ui.home.components.ProgressBar
+import sds.vpn.gram.ui.home.components.ServerCard
 import sds.vpn.gram.ui.home.components.Switch
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
-import sds.vpn.gram.ui.theme.Grey40
-import sds.vpn.gram.ui.theme.Grey70
-import sds.vpn.gram.ui.theme.Grey80
-import sds.vpn.gram.ui.theme.RootDimen
+import sds.vpn.gram.ui.theme.*
 
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @HomeTabsNavGraph(start = true)
 @Destination
 @Composable
 fun HomeScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    serverSent: Server? = null,
 ) {
+    val vm: HomeViewModel = koinViewModel()
+    val chosenServer =
+        if(serverSent == null && vm.servers.collectAsState().value.isEmpty()) Server("", "", "", 80, "")
+        else serverSent ?: vm.servers.collectAsState().value[0]
+
+    val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
+    val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -38,20 +73,89 @@ fun HomeScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var isConnected by remember { mutableStateOf(false) }
+            var isConnected by remember { mutableStateOf(vm.isVpnConnected()) }
 
+            val activity = LocalContext.current as Activity
             Switch(
-                modifier = Modifier.width(150.dp)
+                initialState = isConnected,
+                modifier = Modifier
+                    .width(150.dp)
             ) {
                 isConnected = it
+                if(isConnected)
+                    vm.connectToServer(chosenServer, activity)
+                else
+                    vm.disconnectFromServer(chosenServer)
             }
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(30.dp))
 
             if(isConnected) {
-                Text("Connected", color = Grey40)
+                Text(stringResource(R.string.connected), style = Typography.bodyMedium)
             } else {
-                Text("Disconnected", color = Grey70)
+                Text(stringResource(R.string.disconnected), style = Typography.bodyMedium, color = Gray70)
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(RootDimen)
+        ) {
+            Text(
+                "${(trafficLimit - trafficSpent).toInt()} / ${trafficLimit.toInt()} MB",
+                style = Typography.bodyMedium
+            )
+
+            Spacer(Modifier.height(10.dp))
+
+            ProgressBar(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .height(10.dp),
+                backgroundColor = Color.White,
+                foregroundColor =
+                    Brush.horizontalGradient(listOf(Orange50, Purple50)),
+                progress = ((trafficLimit - trafficSpent) / trafficLimit).toFloat()
+            )
+
+            Spacer(Modifier.height(30.dp))
+
+            val cardModifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .neumorphic(
+                    neuShape = Punched.Rounded(radius = 48.dp),
+                    lightShadowColor = Gray90,
+                    darkShadowColor = Color.LightGray,
+                    elevation = 16.dp,
+                    strokeWidth = 5.dp,
+                    neuInsets = NeuInsets(10.dp, 12.dp)
+                )
+                .clip(shape = RoundedCornerShape(48.dp))
+                .background(Gray80)
+
+            val cardModifierPressed = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .clip(shape = RoundedCornerShape(48.dp))
+                .neumorphic(
+                    neuShape = Pressed.Rounded(radius = 48.dp),
+                    lightShadowColor = Gray90,
+                    darkShadowColor = Color.LightGray,
+                    elevation = 16.dp,
+                    strokeWidth = 5.dp,
+                    neuInsets = NeuInsets(10.dp, 12.dp)
+                )
+                .background(Gray80)
+
+            ServerCard(
+                chosenServer,
+                cardModifier,
+                cardModifierPressed,
+            ) {
+                navigator.navigate(CountriesScreenDestination)
             }
         }
     }

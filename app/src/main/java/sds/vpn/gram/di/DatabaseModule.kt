@@ -16,12 +16,12 @@ var databaseModule = module {
         return context.dataStore
     }
 
-    fun provideUserRepository(api: VpngramApi): UserRepository {
-        return UserRepositoryImpl(api)
+    fun provideUserRepository(api: VpngramApi, dataStore: DataStore<Preferences>): UserRepository {
+        return UserRepositoryImpl(api, dataStore)
     }
 
-    fun provideServerRepository(api: VpngramApi): ServerRepository {
-        return ServerRepositoryImpl(api)
+    fun provideServerRepository(api: VpngramApi, dataStore: DataStore<Preferences>): ServerRepository {
+        return ServerRepositoryImpl(api, dataStore)
     }
 
     single {
@@ -29,11 +29,11 @@ var databaseModule = module {
     }
 
     single {
-        provideUserRepository(get())
+        provideUserRepository(get(), get())
     }
 
     single {
-        provideServerRepository(get())
+        provideServerRepository(get(), get())
     }
 }
 val Context.dataStore by preferencesDataStore(name = "settings")

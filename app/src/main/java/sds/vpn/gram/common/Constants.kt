@@ -8,6 +8,6 @@ object Constants {
 
     // DataStore
     val IS_REGISTERED = booleanPreferencesKey("IS_REGISTERED")
-
-
+    val SERVERS = stringPreferencesKey("SERVERS")
+    val TRAFFIC_LIMIT = stringPreferencesKey("TRAFFIC_LIMIT")
 }

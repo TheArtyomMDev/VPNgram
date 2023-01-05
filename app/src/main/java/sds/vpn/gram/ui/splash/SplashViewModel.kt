@@ -1,12 +1,9 @@
 package sds.vpn.gram.ui.splash
 
-import android.app.Application
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +42,7 @@ class SplashScreenViewModel(
                     dataStore.edit { it[Constants.IS_REGISTERED] = true }
                 } else {
                     servers.emit(
-                        serverRepository.getServers(
+                        serverRepository.getServersFromApi(
                             DeviceUtils.getAndroidID(resourceProvider.context)
                         )
                     )

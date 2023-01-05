@@ -1,7 +1,6 @@
 package sds.vpn.gram.ui.home.components
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -22,16 +21,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import sds.vpn.gram.R
-import sds.vpn.gram.ui.theme.MediumDimen
-import sds.vpn.gram.ui.theme.SmallDimen
 
 @Composable
 fun Switch(
     modifier: Modifier,
     defaultDimen: Dp = 10.dp,
+    initialState: Boolean = false,
     onClick: (Boolean) -> Unit,
 ) {
-    var isEnabled by remember { mutableStateOf(false) }
+    var isEnabled by remember { mutableStateOf(initialState) }
 
     var switchWidth by remember { mutableStateOf(0.dp) }
     var switchHeight by remember { mutableStateOf(0.dp) }
