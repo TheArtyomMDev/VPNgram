@@ -1,7 +1,5 @@
 package sds.vpn.gram.domain.model
 
-import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
-
 
 data class Server(
     val serverId: String,
@@ -10,5 +8,4 @@ data class Server(
     val port: Int = 80,
     val imageUrl: String,
     var ping: Long = 0,
-    var config: GetVpnConfigResponse? = null
 ): java.io.Serializable

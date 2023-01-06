@@ -1,11 +1,7 @@
 package sds.vpn.gram.ui.home
 
 import android.app.Activity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -15,16 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.nikhilchaudhari.library.NeuInsets
@@ -43,7 +32,6 @@ import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 import sds.vpn.gram.ui.theme.*
 
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @HomeTabsNavGraph(start = true)
 @Destination
 @Composable
@@ -52,9 +40,24 @@ fun HomeScreen(
     serverSent: Server? = null,
 ) {
     val vm: HomeViewModel = koinViewModel()
+
+    var isConnected by remember { mutableStateOf<Boolean?>(null) }
+    val lastUsedServer = remember { vm.lastUsedServer }
+
+    LaunchedEffect(key1 = Unit) {
+        if(vm.isVpnConnected() && serverSent != null && serverSent != lastUsedServer) {
+            vm.disconnectFromServer(lastUsedServer)
+            isConnected = false
+        }
+        else isConnected = vm.isVpnConnected()
+    }
+
     val chosenServer =
-        if(serverSent == null && vm.servers.collectAsState().value.isEmpty()) Server("", "", "", 80, "")
-        else serverSent ?: vm.servers.collectAsState().value[0]
+        if(isConnected == true) lastUsedServer
+        else
+            if(serverSent == null && vm.servers.collectAsState().value.isEmpty())
+                Server("", "", "", 80, "")
+            else serverSent ?: vm.servers.collectAsState().value[0]
 
     val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
@@ -73,28 +76,33 @@ fun HomeScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var isConnected by remember { mutableStateOf(vm.isVpnConnected()) }
 
             val activity = LocalContext.current as Activity
-            Switch(
-                initialState = isConnected,
-                modifier = Modifier
-                    .width(150.dp)
-            ) {
-                isConnected = it
-                if(isConnected)
-                    vm.connectToServer(chosenServer, activity)
-                else
-                    vm.disconnectFromServer(chosenServer)
-            }
+            if (isConnected != null) {
+                Switch(
+                    initialState = isConnected!!,
+                    modifier = Modifier
+                        .width(150.dp)
+                ) {
+                    isConnected = it
+                    if (isConnected!!)
+                        vm.connectToServer(chosenServer, activity)
+                    else
+                        vm.disconnectFromServer(chosenServer)
+                }
 
-            Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(30.dp))
 
-            if(isConnected) {
-                Text(stringResource(R.string.connected), style = Typography.bodyMedium)
-            } else {
-                Text(stringResource(R.string.disconnected), style = Typography.bodyMedium, color = Gray70)
+                if (isConnected!!) {
+                    Text(stringResource(R.string.connected), style = Typography.bodyMedium)
+                } else {
+                    Text(
+                        stringResource(R.string.disconnected),
+                        style = Typography.bodyMedium,
+                        color = Gray70
+                    )
             }
+        }
         }
 
         Column(

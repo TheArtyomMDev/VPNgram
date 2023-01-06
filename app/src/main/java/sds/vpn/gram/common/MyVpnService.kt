@@ -9,6 +9,7 @@ import com.wireguard.config.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
 import sds.vpn.gram.domain.model.Server
 
 class MyVpnService(private val context: Context) {
@@ -27,8 +28,8 @@ class MyVpnService(private val context: Context) {
         }
     }
 
-    fun connectWireguardTunnel(server: Server, activity: Activity) {
-        val serverConfig = server.config!!
+    fun connectWireguardTunnel(server: Server, serverConfig: GetVpnConfigResponse, activity: Activity) {
+
         val prepareIntent = GoBackend.VpnService.prepare(context)
         if(prepareIntent != null) {
             ActivityCompat.startActivityForResult(activity, prepareIntent, 0, null)

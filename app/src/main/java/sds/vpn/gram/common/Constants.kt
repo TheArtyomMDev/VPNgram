@@ -10,4 +10,5 @@ object Constants {
     val IS_REGISTERED = booleanPreferencesKey("IS_REGISTERED")
     val SERVERS = stringPreferencesKey("SERVERS")
     val TRAFFIC_LIMIT = stringPreferencesKey("TRAFFIC_LIMIT")
+    val LAST_SERVER = stringPreferencesKey("LAST_SERVER")
 }

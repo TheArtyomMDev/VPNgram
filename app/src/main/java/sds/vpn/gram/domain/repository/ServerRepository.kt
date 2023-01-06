@@ -9,8 +9,9 @@ interface ServerRepository {
 
     suspend fun getServersFromDataStore(): List<Server>
 
-    suspend fun getVpnConfig(deviceId: String, serverId: String): GetVpnConfigResponse
+    suspend fun getVpnConfig(deviceId: String, server: Server): GetVpnConfigResponse
 
     suspend fun disconnect(deviceId: String, serverId: String): Double
 
+    fun getLastUsedServer(): Server
 }
