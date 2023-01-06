@@ -1,8 +1,7 @@
 package sds.vpn.gram.common
 
-import android.app.Activity
 import android.content.Context
-import androidx.core.app.ActivityCompat
+import android.content.Intent
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.config.*
@@ -20,24 +19,21 @@ class MyVpnService(private val context: Context) {
         return backend.getState(tunnel) == Tunnel.State.UP
     }
 
+    fun getVpnPrepareIntent(): Intent? {
+        return GoBackend.VpnService.prepare(context)
+    }
+
     fun disconnectVpn() {
         CoroutineScope(Dispatchers.IO).launch {
-            println("VPN STATE : ${isVpnConnected()}")
             backend.setState(tunnel, Tunnel.State.DOWN, null)
-            println("VPN STATE : ${isVpnConnected()}")
         }
     }
 
-    fun connectWireguardTunnel(server: Server, serverConfig: GetVpnConfigResponse, activity: Activity) {
-
-        val prepareIntent = GoBackend.VpnService.prepare(context)
-        if(prepareIntent != null) {
-            ActivityCompat.startActivityForResult(activity, prepareIntent, 0, null)
-        }
-
+    fun connectWireguardTunnel(server: Server, serverConfig: GetVpnConfigResponse) {
         val interfaceBuilder = Interface.Builder()
         val peerBuilder = Peer.Builder()
 
+        println("attempt to connect to $server")
         val config = Config.Builder()
             .setInterface(
                 interfaceBuilder
@@ -56,7 +52,6 @@ class MyVpnService(private val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             backend.setState(tunnel, Tunnel.State.UP, config)
-            println("VPN STATE : ${isVpnConnected()}")
         }
 
     }

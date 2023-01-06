@@ -1,17 +1,18 @@
 package sds.vpn.gram.ui.home
 
-import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
@@ -42,7 +43,18 @@ fun HomeScreen(
     val vm: HomeViewModel = koinViewModel()
 
     var isConnected by remember { mutableStateOf<Boolean?>(null) }
-    val lastUsedServer = remember { vm.lastUsedServer }
+    val lastUsedServer by vm.lastUsedServer.collectAsState(Server("", "", "", 80, ""))
+
+    var chosenServer by remember { mutableStateOf(vm.getChosenServer()) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        val intentSender = vm.vpnService.getVpnPrepareIntent()
+        if (intentSender == null) {
+            vm.connectToServer(vm.getChosenServer())
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         if(vm.isVpnConnected() && serverSent != null && serverSent != lastUsedServer) {
@@ -52,12 +64,13 @@ fun HomeScreen(
         else isConnected = vm.isVpnConnected()
     }
 
-    val chosenServer =
-        if(isConnected == true) lastUsedServer
-        else
-            if(serverSent == null && vm.servers.collectAsState().value.isEmpty())
-                Server("", "", "", 80, "")
-            else serverSent ?: vm.servers.collectAsState().value[0]
+    if(isConnected == true)
+        chosenServer = lastUsedServer
+    if(isConnected == false) {
+        chosenServer = if(serverSent == null && vm.servers.collectAsState().value.isEmpty())
+            Server("", "", "", 80, "")
+        else serverSent ?: vm.servers.collectAsState().value[0]
+    }
 
     val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
@@ -77,7 +90,6 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val activity = LocalContext.current as Activity
             if (isConnected != null) {
                 Switch(
                     initialState = isConnected!!,
@@ -85,10 +97,19 @@ fun HomeScreen(
                         .width(150.dp)
                 ) {
                     isConnected = it
-                    if (isConnected!!)
-                        vm.connectToServer(chosenServer, activity)
-                    else
+
+                    if (isConnected!!) {
+                        val intentSender = vm.vpnService.getVpnPrepareIntent()
+
+                        if (intentSender != null) {
+                            vm.setChosenServer(chosenServer)
+                            launcher.launch(intentSender)
+                        }
+                        else vm.connectToServer(chosenServer)
+                    }
+                    else {
                         vm.disconnectFromServer(chosenServer)
+                    }
                 }
 
                 Spacer(Modifier.height(30.dp))

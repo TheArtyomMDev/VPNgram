@@ -5,8 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.map
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.NetworkUtils
 import sds.vpn.gram.data.remote.VpngramApi
@@ -92,9 +93,8 @@ class ServerRepositoryImpl(
         }
     }
 
-    override fun getLastUsedServer(): Server = runBlocking {
-        return@runBlocking try {
-            val prefs = dataStore.data.first()
+    override val lastUsedServerFlow: Flow<Server> = dataStore.data.map { prefs ->
+        try {
             val serializedServer = prefs[Constants.LAST_SERVER]
 
             val serverType = object : TypeToken<Server>() {}.type
@@ -102,9 +102,11 @@ class ServerRepositoryImpl(
 
             server
         } catch (e: Exception) {
-            Server("", "", "", 0, "", 0)
+            e.printStackTrace()
+            Server("", "", "", 80, "")
         }
     }
+
 
     override suspend fun disconnect(deviceId: String, serverId: String): Double {
         return try {

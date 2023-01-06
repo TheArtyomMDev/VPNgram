@@ -11,4 +11,5 @@ object Constants {
     val SERVERS = stringPreferencesKey("SERVERS")
     val TRAFFIC_LIMIT = stringPreferencesKey("TRAFFIC_LIMIT")
     val LAST_SERVER = stringPreferencesKey("LAST_SERVER")
+    val CHOSEN_SERVER = stringPreferencesKey("CHOSEN_SERVER")
 }

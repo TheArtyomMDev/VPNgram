@@ -1,12 +1,21 @@
 package sds.vpn.gram.ui.home
 
 import android.app.Activity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.MyVpnService
 import sds.vpn.gram.common.ResourceProvider
@@ -19,14 +28,11 @@ import sds.vpn.gram.domain.repository.UserRepository
 class HomeViewModel(
     private val serverRepository: ServerRepository,
     private val userRepository: UserRepository,
-    private val vpnService: MyVpnService,
+    val vpnService: MyVpnService,
+    private val dataStore: DataStore<Preferences>,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    val lastUsedServer: Server
-        get()  {
-            return serverRepository.getLastUsedServer()
-        }
-
+    val lastUsedServer: Flow<Server> = serverRepository.lastUsedServerFlow
 
     private val _servers = MutableStateFlow<List<Server>>(listOf())
     val servers = _servers.asStateFlow()
@@ -45,7 +51,24 @@ class HomeViewModel(
         }
     }
 
-    fun connectToServer(server: Server, activity: Activity) {
+    fun getChosenServer() = runBlocking {
+        try {
+            val chosenServerSerialized = dataStore.data.first()[Constants.CHOSEN_SERVER]
+            val serverType = object : TypeToken<Server>() {}.type
+
+            Gson().fromJson(chosenServerSerialized, serverType)
+        } catch (e: Exception) {
+            Server("", "", "", 80, "")
+        }
+    }
+
+    fun setChosenServer(server: Server) = runBlocking {
+        dataStore.edit {
+            it[Constants.CHOSEN_SERVER] = Gson().toJson(server)
+        }
+    }
+
+    fun connectToServer(server: Server) {
         CoroutineScope(Dispatchers.IO).launch {
             val serverConfig = serverRepository.getVpnConfig(
                 DeviceUtils.getAndroidID(resourceProvider.context),
@@ -55,7 +78,6 @@ class HomeViewModel(
             vpnService.connectWireguardTunnel(
                 server,
                 serverConfig,
-                activity
             )
         }
     }
