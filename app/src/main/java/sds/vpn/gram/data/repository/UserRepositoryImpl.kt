@@ -56,7 +56,14 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun checkTraffic(deviceId: String): Double {
-        return 2000.0
+    override suspend fun checkTraffic(deviceId: String, serverId: String) {
+        try {
+            api.getTrafficSpent(
+                deviceId,
+                serverId
+            ).body()!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

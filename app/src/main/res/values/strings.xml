@@ -4,4 +4,14 @@
     <string name="disconnected">Disconnected</string>
     <string name="ms">MS</string>
     <string name="subscribe">Subscribe</string>
+    <string name="everyday_usage">Everyday usage</string>
+    <string name="free">Free</string>
+    <string name="invite_friend">Invite friend</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="give_permissions">To make app work stable please provide following permissions</string>
+    <string name="proceed">Proceed</string>
+    <string name="over_other_apps">Over other apps</string>
+    <string name="usage_stats">Usage stats</string>
+    <string name="granted">Granted</string>
+    <string name="not_granted">Not granted</string>
 </resources>

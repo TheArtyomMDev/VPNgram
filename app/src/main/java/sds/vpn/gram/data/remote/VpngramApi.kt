@@ -33,7 +33,7 @@ interface VpngramApi {
     suspend fun getTrafficSpent(
         @Query("device_id") deviceId: String,
         @Query("server_id") serverId: String,
-    ): Response<Double>
+    ): Response<Unit>
 
     @POST("/mobile/disconnect")
     suspend fun disconnect(
@@ -44,5 +44,5 @@ interface VpngramApi {
     @POST("/mobile/get_ads")
     suspend fun getAds(
         @Query("device_id") deviceId: String,
-    ): Response<String>
+    ): Response<Map<String, String>>
 }

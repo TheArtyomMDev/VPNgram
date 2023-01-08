@@ -4,4 +4,13 @@
     <string name="disconnected">Отключено</string>
     <string name="ms">МС</string>
     <string name="subscribe">Оформить подписку</string>
+    <string name="everyday_usage">Ежедневное использование</string>
+    <string name="free">Бесплатно</string>
+    <string name="invite_friend">Пригласить друга</string>
+    <string name="give_permissions">Для нормальной работы предоставьте разрешения:</string>
+    <string name="proceed">Продолжить</string>
+    <string name="over_other_apps">Поверх других приложений</string>
+    <string name="usage_stats">Данные об использовании</string>
+    <string name="granted">Предоставлено</string>
+    <string name="not_granted">Не предоставлено</string>
 </resources>

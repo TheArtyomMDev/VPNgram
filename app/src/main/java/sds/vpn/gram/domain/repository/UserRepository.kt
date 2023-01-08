@@ -9,6 +9,5 @@ interface UserRepository {
 
     suspend fun getTrafficLimit(deviceId: String): GetTrafficLimitResponse
 
-    suspend fun checkTraffic(deviceId: String): Double
-
+    suspend fun checkTraffic(deviceId: String, serverId: String)
 }

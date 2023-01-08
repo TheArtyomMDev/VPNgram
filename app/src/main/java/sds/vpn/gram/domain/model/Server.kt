@@ -8,4 +8,14 @@ data class Server(
     val port: Int = 80,
     val imageUrl: String,
     var ping: Long = 0,
-): java.io.Serializable
+): java.io.Serializable {
+    override fun equals(other: Any?): Boolean {
+        return if(other is Server) {
+            other.serverId == serverId
+                    && other.country == country
+                    && other.IP == IP
+                    && other.port == port
+                    && other.imageUrl == imageUrl
+        } else false
+    }
+}

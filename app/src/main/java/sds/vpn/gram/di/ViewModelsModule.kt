@@ -4,13 +4,14 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import sds.vpn.gram.ui.countries.CountriesViewModel
 import sds.vpn.gram.ui.home.HomeViewModel
+import sds.vpn.gram.ui.permissions.PermissionsViewModel
 import sds.vpn.gram.ui.premium.PremiumViewModel
 import sds.vpn.gram.ui.splash.SplashScreenViewModel
 
 var viewModelsModule = module {
 
     viewModel {
-        SplashScreenViewModel(get(), get(), get(), get())
+        SplashScreenViewModel(get(), get(), get(), get(), get())
     }
 
     viewModel {
@@ -23,5 +24,9 @@ var viewModelsModule = module {
 
     viewModel {
         CountriesViewModel(get(), get())
+    }
+
+    viewModel {
+        PermissionsViewModel(get())
     }
 }

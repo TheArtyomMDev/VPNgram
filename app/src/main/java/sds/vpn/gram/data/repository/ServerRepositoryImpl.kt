@@ -76,7 +76,7 @@ class ServerRepositoryImpl(
             )
             )
 
-            testServers.sortedBy { it.ping } //servers.sortedBy { it.ping }
+            servers.sortedBy { it.ping } //servers.sortedBy { it.ping }
         } catch (e: Exception) {
             listOf()
         }

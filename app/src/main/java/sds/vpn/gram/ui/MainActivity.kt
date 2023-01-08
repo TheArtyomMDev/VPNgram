@@ -1,5 +1,7 @@
 package sds.vpn.gram.ui
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +16,7 @@ import androidx.compose.ui.res.vectorResource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import sds.vpn.gram.R
+import sds.vpn.gram.common.VpnService
 import sds.vpn.gram.ui.theme.Gray80
 import sds.vpn.gram.ui.theme.VPNgramTheme
 
@@ -44,6 +47,12 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, VpnService::class.java))
+        } else {
+            startService(Intent(this, VpnService::class.java))
         }
     }
 }

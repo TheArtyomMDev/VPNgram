@@ -27,6 +27,7 @@ fun Switch(
     modifier: Modifier,
     defaultDimen: Dp = 10.dp,
     initialState: Boolean = false,
+    isClickable: Boolean = true,
     onClick: (Boolean) -> Unit,
 ) {
     var isEnabled by remember { mutableStateOf(initialState) }
@@ -58,8 +59,10 @@ fun Switch(
                     interactionSource = interactionSource,
                     indication = null
                 ) {
-                    isEnabled = !isEnabled
-                    onClick(isEnabled)
+                    if(isClickable) {
+                        isEnabled = !isEnabled
+                        onClick(isEnabled)
+                    }
                 }
         ) {
 

@@ -6,6 +6,7 @@ import sds.vpn.gram.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -19,6 +20,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import sds.vpn.gram.ui.destinations.HomeScreenDestination
 import sds.vpn.gram.ui.destinations.HomeTabsScreenDestination
+import sds.vpn.gram.ui.destinations.PermissionsScreenDestination
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 
 
@@ -29,6 +31,8 @@ fun SplashScreen(
     navigator: DestinationsNavigator
 ) {
     val vm: SplashScreenViewModel = koinViewModel()
+
+    val isAllGranted by vm.isAllGranted.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -56,11 +60,14 @@ fun SplashScreen(
         }
 
         val screenState = vm.splashScreenState.collectAsState().value
-        LaunchedEffect(key1 = screenState) {
+        LaunchedEffect(key1 = screenState, key2 = isAllGranted) {
             when (screenState) {
                 is SplashScreenState.Error -> {}
                 is SplashScreenState.Successful -> {
-                   navigator.navigate(HomeTabsScreenDestination)
+                    if(isAllGranted == true)
+                        navigator.navigate(HomeTabsScreenDestination)
+                    else if(isAllGranted == false)
+                        navigator.navigate(PermissionsScreenDestination)
                 }
                 is SplashScreenState.Loading -> {}
             }

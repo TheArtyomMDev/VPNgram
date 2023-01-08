@@ -1,6 +1,5 @@
 package sds.vpn.gram.ui.home
 
-import android.app.Activity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.DeviceUtils
-import sds.vpn.gram.common.MyVpnService
+import sds.vpn.gram.common.MyVpnTunnel
 import sds.vpn.gram.common.ResourceProvider
 import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
 import sds.vpn.gram.domain.model.Server
@@ -28,7 +27,7 @@ import sds.vpn.gram.domain.repository.UserRepository
 class HomeViewModel(
     private val serverRepository: ServerRepository,
     private val userRepository: UserRepository,
-    val vpnService: MyVpnService,
+    val vpnService: MyVpnTunnel,
     private val dataStore: DataStore<Preferences>,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {

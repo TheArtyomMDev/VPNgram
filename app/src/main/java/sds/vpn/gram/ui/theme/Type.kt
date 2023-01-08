@@ -17,10 +17,10 @@ val interFontFamily = FontFamily(
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = interFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
         lineHeight = 28.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = 0.2.sp,
         color = Gray20
     ),
     bodyMedium = TextStyle(
@@ -33,11 +33,11 @@ val Typography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = interFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 24.sp,
-        lineHeight = 30.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 30.sp,
+        lineHeight = 36.sp,
         letterSpacing = 0.sp,
-        color = Gray40
+        color = Pink50
     ),
     labelSmall = TextStyle(
         fontFamily = interFontFamily,
