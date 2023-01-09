@@ -39,6 +39,14 @@ val Typography = Typography(
         letterSpacing = 0.sp,
         color = Pink50
     ),
+    titleMedium = TextStyle(
+        fontFamily = interFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp,
+        lineHeight = 34.sp,
+        letterSpacing = 0.sp,
+        color = Pink50
+    ),
     labelSmall = TextStyle(
         fontFamily = interFontFamily,
         fontWeight = FontWeight.Medium,

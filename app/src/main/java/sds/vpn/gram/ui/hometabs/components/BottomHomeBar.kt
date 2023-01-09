@@ -1,13 +1,19 @@
 package sds.vpn.gram.ui.hometabs.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.navigation.navigateTo
@@ -15,36 +21,54 @@ import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.destination
+import me.nikhilchaudhari.library.NeuInsets
+import me.nikhilchaudhari.library.neumorphic
 import sds.vpn.gram.R
 import sds.vpn.gram.ui.destinations.CountriesScreenDestination
 import sds.vpn.gram.ui.destinations.DirectionDestination
 import sds.vpn.gram.ui.destinations.HomeScreenDestination
 import sds.vpn.gram.ui.destinations.PremiumScreenDestination
-import sds.vpn.gram.ui.theme.RootDimen
+import sds.vpn.gram.ui.splash.DeepLinkArgs
+import sds.vpn.gram.ui.theme.*
 
 @Composable
 fun BottomHomeBar(
     navigator: NavController,
-    modifier: Modifier
+    modifier: Modifier,
+    deepLinkArgs: DeepLinkArgs
 ) {
+    var barHeight by remember { mutableStateOf(0.dp) }
+
+    val localDensity = LocalDensity.current
+
+    LaunchedEffect(key1 = Unit) {
+        deepLinkArgs.destination?.let { navigator.navigate(it.baseRoute) }
+    }
+
     Box(
         modifier = modifier
+            .neumorphic(
+                neuShape = punchedSmallShape,
+                lightShadowColor = Gray90,
+                darkShadowColor = Color.White,
+                elevation = 16.dp,
+                strokeWidth = 3.dp,
+                neuInsets = NeuInsets(10.dp, 12.dp)
+            )
+            .clip(shape = roundedSmallShapeTopCorners)
+            .background(Gray80)
+            .onSizeChanged {
+                with(localDensity) {
+                    barHeight = it.height.toDp()
+                }
+            }
     ) {
-        Image(
-            imageVector = ImageVector.vectorResource(R.drawable.bottom_background),
-            contentDescription = "bottom_bar",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-
         val items = listOf(
             BottomHomeBarItem.Home, BottomHomeBarItem.Countries, BottomHomeBarItem.Premium
         )
 
         val currentDestination = navigator.currentBackStackEntryAsState().value?.destination()
 
-        println(currentDestination)
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.
@@ -59,10 +83,9 @@ fun BottomHomeBar(
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(top = RootDimen * 3.4F, bottom = RootDimen * 1.5F)
+                        .padding(top = barHeight / 3F, bottom = barHeight / 3F)
                         .clickable {
                             navigator.navigate(it.destination.baseRoute)
-                            //navigator.navigateTo(it.destination as Direction)
                         }
                 )
             }

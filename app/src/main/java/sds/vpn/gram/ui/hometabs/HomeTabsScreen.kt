@@ -18,14 +18,16 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import sds.vpn.gram.ui.NavGraphs
 import sds.vpn.gram.ui.hometabs.components.BottomHomeBar
+import sds.vpn.gram.ui.splash.DeepLinkArgs
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
 @Destination
 @Composable
-fun HomeTabsScreen() {
+fun HomeTabsScreen(
+    deepLinkArgs: DeepLinkArgs
+) {
 
     val navController = rememberNavController()
 
@@ -34,14 +36,15 @@ fun HomeTabsScreen() {
     ) {
         DestinationsNavHost(
             navGraph = NavGraphs.homeTabs,
-            modifier = Modifier.weight(7f),
+            modifier = Modifier.weight(10f),
             navController = navController
         )
         BottomHomeBar(
             modifier = Modifier
                 .weight(1F)
                 .fillMaxWidth(),
-            navigator = navController
+            navigator = navController,
+            deepLinkArgs = deepLinkArgs
         )
     }
 }

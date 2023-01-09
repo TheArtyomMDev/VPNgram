@@ -74,7 +74,7 @@ class HomeViewModel(
                 server
             )
 
-            vpnService.connectWireguardTunnel(
+            vpnService.connectVpn(
                 server,
                 serverConfig,
             )

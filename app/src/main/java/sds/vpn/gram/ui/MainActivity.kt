@@ -15,14 +15,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.dependency
 import sds.vpn.gram.R
 import sds.vpn.gram.common.VpnService
+import sds.vpn.gram.ui.destinations.HomeScreenDestination
+import sds.vpn.gram.ui.destinations.PremiumScreenDestination
+import sds.vpn.gram.ui.splash.DeepLinkArgs
 import sds.vpn.gram.ui.theme.Gray80
 import sds.vpn.gram.ui.theme.VPNgramTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val openPremium = intent.extras?.getBoolean("openPremium")
+        val openHome = intent.extras?.getBoolean("openHome")
+
+        val destination =
+            if(openPremium == true) PremiumScreenDestination
+            else if(openHome == true) HomeScreenDestination
+            else null
+
         setContent {
             VPNgramTheme {
                 // A surface container using the 'background' color from the theme
@@ -43,7 +56,10 @@ class MainActivity : ComponentActivity() {
                     )
 
                     DestinationsNavHost(
-                       navGraph = NavGraphs.root
+                        navGraph = NavGraphs.root,
+                        dependenciesContainerBuilder = {
+                            dependency(DeepLinkArgs(destination))
+                        }
                     )
                 }
             }

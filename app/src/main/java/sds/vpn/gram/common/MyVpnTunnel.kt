@@ -8,8 +8,10 @@ import com.wireguard.config.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sds.vpn.gram.R
 import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
 import sds.vpn.gram.domain.model.Server
+import java.net.InetAddress
 
 class MyVpnTunnel(private val context: Context) {
     private val tunnel = WgTunnel()
@@ -29,16 +31,16 @@ class MyVpnTunnel(private val context: Context) {
         }
     }
 
-    fun connectWireguardTunnel(server: Server, serverConfig: GetVpnConfigResponse) {
+    fun connectVpn(server: Server, serverConfig: GetVpnConfigResponse) {
         val interfaceBuilder = Interface.Builder()
         val peerBuilder = Peer.Builder()
 
-        println("attempt to connect to $server")
         val config = Config.Builder()
             .setInterface(
                 interfaceBuilder
                     .addAddress(InetNetwork.parse(serverConfig.address))
                     .parsePrivateKey(serverConfig.interfacePrivateKey)
+                    .addDnsServer(InetAddress.getByName("dns.google.com"))
                     .build()
             )
             .addPeer(
@@ -56,9 +58,9 @@ class MyVpnTunnel(private val context: Context) {
 
     }
 
-    class WgTunnel: Tunnel {
+    inner class WgTunnel: Tunnel {
         override fun getName(): String {
-            return "Vpngram"
+            return context.resources.getString(R.string.app_name)
         }
 
         override fun onStateChange(newState: Tunnel.State) {}

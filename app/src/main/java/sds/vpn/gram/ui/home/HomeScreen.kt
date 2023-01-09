@@ -25,6 +25,7 @@ import org.koin.androidx.compose.koinViewModel
 import sds.vpn.gram.R
 import sds.vpn.gram.domain.model.Server
 import sds.vpn.gram.ui.destinations.CountriesScreenDestination
+import sds.vpn.gram.ui.destinations.PremiumScreenDestination
 import sds.vpn.gram.ui.home.components.ProgressBar
 import sds.vpn.gram.ui.home.components.ServerCard
 import sds.vpn.gram.ui.home.components.Switch
@@ -99,13 +100,16 @@ fun HomeScreen(
                     isConnected = it
 
                     if (isConnected!!) {
-                        val intentSender = vm.vpnService.getVpnPrepareIntent()
+                        if(trafficLimit - trafficSpent > 0) {
+                            val intentSender = vm.vpnService.getVpnPrepareIntent()
 
-                        if (intentSender != null) {
-                            vm.setChosenServer(chosenServer)
-                            launcher.launch(intentSender)
+                            if (intentSender != null) {
+                                vm.setChosenServer(chosenServer)
+                                launcher.launch(intentSender)
+                            } else vm.connectToServer(chosenServer)
+                        } else {
+                            navigator.navigate(PremiumScreenDestination)
                         }
-                        else vm.connectToServer(chosenServer)
                     }
                     else {
                         vm.disconnectFromServer(chosenServer)
@@ -133,7 +137,7 @@ fun HomeScreen(
                 .padding(RootDimen)
         ) {
             Text(
-                "${(trafficLimit - trafficSpent).toInt()} / ${trafficLimit.toInt()} MB",
+                "${trafficSpent.toInt()} / ${trafficLimit.toInt()} MB",
                 style = Typography.bodyMedium
             )
 
@@ -146,7 +150,7 @@ fun HomeScreen(
                 backgroundColor = Color.White,
                 foregroundColor =
                     Brush.horizontalGradient(listOf(Orange50, Purple50)),
-                progress = ((trafficLimit - trafficSpent) / trafficLimit).toFloat()
+                progress = (trafficSpent / trafficLimit).toFloat()
             )
 
             Spacer(Modifier.height(30.dp))
@@ -186,6 +190,8 @@ fun HomeScreen(
             ) {
                 navigator.navigate(CountriesScreenDestination)
             }
+
+            Spacer(Modifier.height(20.dp))
         }
     }
 }

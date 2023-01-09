@@ -15,6 +15,7 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -27,7 +28,6 @@ import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 import sds.vpn.gram.ui.theme.*
 
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @HomeTabsNavGraph()
 @Destination
 @Composable
@@ -42,23 +42,16 @@ fun PremiumScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        TopBar(
-            modifier = Modifier
-                .height(55.dp)
-                .align(Alignment.TopStart)
-                .padding(RootDimen)
-        )
-
         val boxModifier = Modifier
             .fillMaxWidth()
-            .padding(RootDimen)
+            .padding(horizontal = RootDimen)
             .neumorphic(
                 neuShape = punchedSmallShape,
                 lightShadowColor = Gray90,
                 darkShadowColor = Color.LightGray,
-                elevation = 16.dp,
+                elevation = 5.dp,
                 strokeWidth = 5.dp,
-                neuInsets = NeuInsets(10.dp, 12.dp)
+                neuInsets = NeuInsets(5.dp, 5.dp)
             )
             .clip(shape = roundedSmallShape)
             .background(Gray80)
@@ -68,6 +61,13 @@ fun PremiumScreen(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
         ) {
+            TopBar(
+                modifier = Modifier
+                    .height(55.dp)
+                    .align(Alignment.Start)
+                    .padding(RootDimen)
+            )
+
             Box(
                 modifier = boxModifier
             ) {
@@ -77,7 +77,7 @@ fun PremiumScreen(
                 ) {
                     Text(stringResource(R.string.everyday_usage), style = Typography.bodyLarge)
 
-                    Spacer(Modifier.height(5.dp))
+                    Spacer(Modifier.height(3.dp))
 
                     Text(
                         stringResource(R.string.free),
@@ -88,11 +88,13 @@ fun PremiumScreen(
                     Spacer(Modifier.height(RootDimen))
 
                     Text(
-                        "${(trafficLimit - trafficSpent).toInt()} / ${trafficLimit.toInt()} MB",
+                        "${trafficSpent.toInt()} / ${trafficLimit.toInt()} MB",
                         style = Typography.titleLarge
                     )
                 }
             }
+
+            Spacer(Modifier.height(MediumDimen))
 
             Box(
                 modifier = boxModifier
@@ -100,7 +102,7 @@ fun PremiumScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .height(70.dp)
+                        .height(60.dp)
                         .padding(SmallDimen)
                 ) {
                     Image(
@@ -113,7 +115,7 @@ fun PremiumScreen(
 
                     Spacer(Modifier.weight(1F))
 
-                    Text(stringResource(R.string.invite_friend), style = Typography.bodyLarge)
+                    Text(stringResource(R.string.invite_friend), style = Typography.bodyMedium, color = Gray20)
 
                     Spacer(Modifier.weight(1F))
                 }
@@ -133,29 +135,31 @@ fun PremiumScreen(
                     modifier = Modifier
                         .padding(RootDimen)
                 ) {
-                    Text(stringResource(R.string.unlimited), style = Typography.bodyLarge, color = Gray70)
+                    Text(stringResource(R.string.unlimited), style = Typography.bodyMedium, color = Gray70)
 
                     Spacer(Modifier.height(5.dp))
 
                     Text(
                         "250 руб / мес",
-                        style = Typography.titleLarge,
+                        style = Typography.titleMedium,
                     )
                 }
             }
+
+            Spacer(Modifier.height(MediumDimen))
+
             Box(
                 modifier = Modifier
-                    .padding(RootDimen)
+                    .padding(horizontal = RootDimen)
                     .neumorphic(
                         neuShape = punchedSmallShape,
                         lightShadowColor = Gray90,
                         darkShadowColor = Color.LightGray,
-                        elevation = 16.dp,
+                        elevation = 5.dp,
                         strokeWidth = 5.dp,
-                        neuInsets = NeuInsets(10.dp, 12.dp)
+                        neuInsets = NeuInsets(5.dp, 5.dp)
                     )
                     .clip(shape = roundedSmallShape)
-            
             ) {
                 Image(
                     imageVector = ImageVector.vectorResource(R.drawable.subscribe_background),
@@ -166,12 +170,14 @@ fun PremiumScreen(
                 )
                 Text(
                     stringResource(R.string.subscribe),
-                    style = Typography.bodyLarge,
+                    style = Typography.bodyMedium,
                     color = Color.White,
                     modifier = Modifier
                         .align(Alignment.Center)
                 )
             }
+
+            Spacer(Modifier.height(1.7*RootDimen))
         }
     }
 }

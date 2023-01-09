@@ -41,7 +41,10 @@ class PermissionsRepositoryImpl(
                 nameResource = R.string.usage_stats,
                 checkIsGranted = { DeviceUtils.checkUsageStatsGranted(it) },
                 getGrantIntent = {
-                    return@Permission Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                    return@Permission Intent(
+                        Settings.ACTION_USAGE_ACCESS_SETTINGS,
+                        Uri.parse("package:${context.packageName}")
+                    )
                 }
             )
         )

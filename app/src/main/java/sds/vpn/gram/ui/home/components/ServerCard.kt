@@ -56,11 +56,11 @@ fun ServerCard(
                     .padding(10.dp)
             )
 
-            Text(server.country, style = Typography.bodyLarge)
+            Text(server.country, style = Typography.bodyMedium, color = Gray20)
 
             Spacer(Modifier.weight(1f))
 
-            Text("${server.ping} ${stringResource(R.string.ms)}", style = Typography.bodyLarge, color = Gray40)
+            Text("${server.ping} ${stringResource(R.string.ms)}", style = Typography.bodyMedium, color = Gray40)
 
             Spacer(Modifier.width(20.dp))
 

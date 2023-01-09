@@ -19,10 +19,6 @@
         android:theme="@style/Theme.VPNgram"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
-        <service
-            android:name=".common.VpnService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity
             android:name=".ui.MainActivity"
@@ -33,6 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:excludeFromRecents="true"
+            android:exported="false" />
+
+        <service
+            android:name=".common.VpnService"
+            android:enabled="true"
+            android:exported="true" />
 
         <service
             android:name="com.wireguard.android.backend.GoBackend$VpnService"
