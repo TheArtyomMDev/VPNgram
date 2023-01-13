@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import sds.vpn.gram.common.MyVpnTunnel
 import sds.vpn.gram.common.ResourceProvider
 import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
 import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.domain.repository.PermissionsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
 
@@ -27,6 +29,7 @@ import sds.vpn.gram.domain.repository.UserRepository
 class HomeViewModel(
     private val serverRepository: ServerRepository,
     private val userRepository: UserRepository,
+    private val permissionsRepository: PermissionsRepository,
     val vpnService: MyVpnTunnel,
     private val dataStore: DataStore<Preferences>,
     private val resourceProvider: ResourceProvider
@@ -39,6 +42,9 @@ class HomeViewModel(
     private val _trafficLimitResponse = MutableStateFlow(GetTrafficLimitResponse(0.0, 0.0))
     val trafficLimitResponse = _trafficLimitResponse.asStateFlow()
 
+    private val _isAllGranted = MutableStateFlow<Boolean?>(null)
+    val isAllGranted = _isAllGranted.asStateFlow()
+
     init {
         CoroutineScope(Dispatchers.IO).launch {
             _servers.emit(serverRepository.getServersFromDataStore())
@@ -47,6 +53,7 @@ class HomeViewModel(
                     DeviceUtils.getAndroidID(resourceProvider.context)
                 )
             )
+            updateIsAllGranted()
         }
     }
 
@@ -78,6 +85,12 @@ class HomeViewModel(
                 server,
                 serverConfig,
             )
+        }
+    }
+
+    fun updateIsAllGranted() {
+        viewModelScope.launch {
+            _isAllGranted.emit(permissionsRepository.checkAllPermissionsGranted())
         }
     }
 

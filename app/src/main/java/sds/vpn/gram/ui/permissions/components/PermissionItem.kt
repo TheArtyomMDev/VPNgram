@@ -85,11 +85,12 @@ fun PermissionItem(
         ) {
             Column(
                 modifier = Modifier
-                    .width(200.dp)
+                    .weight(1F)
             ){
                 Text(
                     stringResource(permission.nameResource),
-                    style = Typography.bodyLarge
+                    style = Typography.bodySmall,
+                    color = Gray20
                 )
 
                 Spacer(Modifier.height(5.dp))
@@ -99,28 +100,28 @@ fun PermissionItem(
                         if(permission.checkIsGranted(context)) R.string.granted
                         else R.string.not_granted
                     ),
-                    style = Typography.bodyMedium,
+                    style = Typography.bodySmall,
                     color = Gray70,
                 )
             }
 
-            Spacer(Modifier.weight(1F))
-
             if(isGranted)
                 Switch(
                     modifier = Modifier
-                        .width(70.dp),
+                        .width(80.dp),
                     isClickable = false,
                     defaultDimen = 4.dp,
                     initialState = true
                 ) {}
             else Switch(
                 modifier = Modifier
-                    .width(70.dp),
+                    .width(80.dp),
                 isClickable = false,
                 defaultDimen = 4.dp,
                 initialState = false
-            ) {}
+            ) {
+                activityLauncher.launch(permission.getGrantIntent(context))
+            }
         }
 
     }

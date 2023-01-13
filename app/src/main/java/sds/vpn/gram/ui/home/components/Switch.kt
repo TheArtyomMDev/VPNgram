@@ -63,6 +63,9 @@ fun Switch(
                         isEnabled = !isEnabled
                         onClick(isEnabled)
                     }
+                    else {
+                        onClick(isEnabled)
+                    }
                 }
         ) {
 

@@ -31,6 +31,14 @@ val Typography = Typography(
         letterSpacing = 0.5.sp,
         color = Gray40
     ),
+    bodySmall = TextStyle(
+        fontFamily = interFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp,
+        color = Gray40
+    ),
     titleLarge = TextStyle(
         fontFamily = interFontFamily,
         fontWeight = FontWeight.SemiBold,

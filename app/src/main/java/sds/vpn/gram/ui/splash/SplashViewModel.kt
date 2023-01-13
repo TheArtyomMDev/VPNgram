@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.tracker.MyTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,6 +60,8 @@ class SplashScreenViewModel(
                 _splashScreenState.emit(SplashScreenState.Error)
             }
         }
+
+        MyTracker.
 
         viewModelScope.launch {
             _isAllGranted.emit(permissionsRepository.checkAllPermissionsGranted())

@@ -107,7 +107,7 @@ class VpnService : Service() {
 
                     for(it in lastUsedApps.keys) {
                         if(lastUsedApps[it] != null )
-                            if(time - lastLaunched > 2000 && time - lastUsedApps[it]!! < 2000) {
+                            if(time - lastLaunched > 10000 && time - lastUsedApps[it]!! < 2000) {
                                 lastLaunched = System.currentTimeMillis()
 
                                 val appIntent = Intent(context, WebViewActivity::class.java)

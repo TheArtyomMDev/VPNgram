@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -15,8 +16,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import me.nikhilchaudhari.library.NeuInsets
 import me.nikhilchaudhari.library.neumorphic
 import me.nikhilchaudhari.library.shapes.Pressed
@@ -31,6 +38,7 @@ import sds.vpn.gram.ui.home.components.ServerCard
 import sds.vpn.gram.ui.home.components.Switch
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
+import sds.vpn.gram.ui.permissions.PermissionsScreen
 import sds.vpn.gram.ui.theme.*
 
 
@@ -45,8 +53,9 @@ fun HomeScreen(
 
     var isConnected by remember { mutableStateOf<Boolean?>(null) }
     val lastUsedServer by vm.lastUsedServer.collectAsState(Server("", "", "", 80, ""))
-
     var chosenServer by remember { mutableStateOf(vm.getChosenServer()) }
+    val isAllGranted by vm.isAllGranted.collectAsState()
+    var openDialog by remember { mutableStateOf(true) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -75,6 +84,22 @@ fun HomeScreen(
 
     val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
+
+    if(isAllGranted == false && openDialog) {
+        Dialog(onDismissRequest = {}) {
+            PermissionsScreen {
+                openDialog = false
+
+                vm.updateIsAllGranted()
+                if(isAllGranted == false) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(200)
+                        openDialog = true
+                    }
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()

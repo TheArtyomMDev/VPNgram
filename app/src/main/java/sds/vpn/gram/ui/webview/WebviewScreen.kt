@@ -35,6 +35,26 @@ fun WebViewScreen(
             backEnabled = view.canGoBack()
             super.onPageStarted(view, url, favicon)
         }
+
+        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            val mainIntent = Intent(context, MainActivity::class.java)
+
+            if(request?.url.toString().contains("activation.com")) {
+                if(openPremium) {
+                    mainIntent.putExtra("openPremium", true)
+                }
+                else if(openHome) {
+                    mainIntent.putExtra("openHome", true)
+                }
+                context.startActivity(mainIntent)
+                (context as Activity).finish()
+            }
+            else if(request?.url.toString().contains("close.com")) {
+                (context as Activity).finish()
+            }
+
+            return super.shouldOverrideUrlLoading(view, request)
+        }
     }
 
     Box(
@@ -44,47 +64,32 @@ fun WebViewScreen(
         AndroidView(
             factory = {
                 WebView(it).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        setDownloadListener { url, _, _, _, _ ->
-                            val i = Intent(Intent.ACTION_VIEW)
-                            i.data = Uri.parse(url)
-                            context.startActivity(i)
-                        }
-                        webViewClient = mWebViewClient
-                        settings.apply {
-                            javaScriptEnabled = true
-                            javaScriptCanOpenWindowsAutomatically = true
-                            domStorageEnabled = true
-                            databaseEnabled = true
-                            loadWithOverviewMode = true
-                            useWideViewPort = true
-                            builtInZoomControls = true
-                            displayZoomControls = false
-                            setSupportZoom(true)
-                            javaScriptCanOpenWindowsAutomatically = true
-                            defaultTextEncodingName = "utf-8"
-                        }
-                        setOnTouchListener { view, _ ->
-                            view.performClick()
-
-                            val mainIntent = Intent(context, MainActivity::class.java)
-                            if(openPremium) {
-                                mainIntent.putExtra("openPremium", true)
-                            }
-                            else if(openHome) {
-                                mainIntent.putExtra("openHome", true)
-                            }
-                            context.startActivity(mainIntent)
-                            (context as Activity).finish()
-
-                            return@setOnTouchListener false
-                        }
-                        loadUrl(url)
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    setDownloadListener { url, _, _, _, _ ->
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        context.startActivity(i)
                     }
-                      },
+                    webViewClient = mWebViewClient
+                    settings.apply {
+                        javaScriptEnabled = true
+                        javaScriptCanOpenWindowsAutomatically = true
+                        domStorageEnabled = true
+                        databaseEnabled = true
+                        loadWithOverviewMode = true
+                        useWideViewPort = true
+                        builtInZoomControls = true
+                        displayZoomControls = false
+                        setSupportZoom(true)
+                        javaScriptCanOpenWindowsAutomatically = true
+                        defaultTextEncodingName = "utf-8"
+                    }
+                    loadUrl(url)
+                }
+            },
             update = { webView = it },
             modifier = Modifier
                 .fillMaxSize()
