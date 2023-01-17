@@ -19,3 +19,36 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class androidx.datastore.*.** {*;}
+-keep class androidx.datastore.preferences.*.** {*;}
+
+-keep class com.yandex.metrica.** { *; }
+-dontwarn com.yandex.metrica.**
+
+
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepattributes AnnotationDefault
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface * extends <1>
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+
+-keep class com.google.gson.stream.** { *; }
+
+-keep class sds.vpn.gram.domain.model.** { *; }
+-keep class sds.vpn.gram.data.remote.dto.** { *; }
+
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz

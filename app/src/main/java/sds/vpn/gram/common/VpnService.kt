@@ -26,7 +26,7 @@ class VpnService : Service() {
     private val NOTIFICATION_ID = 1
 
     @SuppressLint("UnspecifiedImmutableFlag", "NewApi")
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val vpnTunnel: MyVpnTunnel by inject()
         val adsRepository: AdsRepository by inject()
         val userRepository: UserRepository by inject()
