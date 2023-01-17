@@ -1,7 +1,11 @@
 package sds.vpn.gram.ui.premium
 
+import android.content.Intent
+import android.content.Intent.ACTION_SEND
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -12,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -23,6 +28,9 @@ import me.nikhilchaudhari.library.NeuInsets
 import me.nikhilchaudhari.library.neumorphic
 import org.koin.androidx.compose.koinViewModel
 import sds.vpn.gram.R
+import sds.vpn.gram.common.Constants
+import sds.vpn.gram.common.DeviceUtils
+import sds.vpn.gram.common.InviteLinkBuilder
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 import sds.vpn.gram.ui.theme.*
@@ -35,6 +43,8 @@ fun PremiumScreen(
     navigator: DestinationsNavigator
 ) {
     val vm: PremiumViewModel = koinViewModel()
+
+    val context = LocalContext.current
 
     val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
@@ -104,6 +114,18 @@ fun PremiumScreen(
                     modifier = Modifier
                         .height(60.dp)
                         .padding(SmallDimen)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            val inviteBuilder = InviteLinkBuilder()
+                            inviteBuilder.setAndroidId(DeviceUtils.getAndroidID(context))
+
+                            val sendLinkIntent = Intent(ACTION_SEND)
+                            sendLinkIntent.type = "text/plain"
+                            sendLinkIntent.putExtra(Intent.EXTRA_TEXT, inviteBuilder.build())
+                            context.startActivity(Intent.createChooser(sendLinkIntent, "Share link"))
+                        }
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(R.drawable.invite_friend),

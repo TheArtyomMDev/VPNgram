@@ -31,7 +31,7 @@ class MyVpnTunnel(private val context: Context) {
         }
     }
 
-    fun connectVpn(server: Server, serverConfig: GetVpnConfigResponse) {
+    fun connectVpn(server: Server, serverConfig: GetVpnConfigResponse) = try {
         val interfaceBuilder = Interface.Builder()
         val peerBuilder = Peer.Builder()
 
@@ -56,6 +56,8 @@ class MyVpnTunnel(private val context: Context) {
             backend.setState(tunnel, Tunnel.State.UP, config)
         }
 
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
     inner class WgTunnel: Tunnel {

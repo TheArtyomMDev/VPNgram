@@ -16,12 +16,13 @@ import java.util.*
 
 
 object DeviceUtils {
-
+    @JvmStatic
     @SuppressLint("HardwareIds")
     fun getAndroidID(context: Context): String {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
+    @JvmStatic
     fun checkAlertSystemWindowsPermission(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Settings.canDrawOverlays(context)
@@ -29,13 +30,14 @@ object DeviceUtils {
             true
         }
     }
-
+    @JvmStatic
     fun checkUsageStatsGranted(context: Context): Boolean {
         val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(OPSTR_GET_USAGE_STATS, myUid(), context.packageName)
         return mode == MODE_ALLOWED;
     }
 
+    @JvmStatic
     fun getLastOpenedApps(context: Context): Map<String, Long> {
         val apps = mutableMapOf<String, Long>()
 

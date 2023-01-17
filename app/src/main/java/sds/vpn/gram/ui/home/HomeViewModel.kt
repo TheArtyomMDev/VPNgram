@@ -21,6 +21,7 @@ import sds.vpn.gram.common.MyVpnTunnel
 import sds.vpn.gram.common.ResourceProvider
 import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
 import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.PermissionsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
@@ -30,6 +31,7 @@ class HomeViewModel(
     private val serverRepository: ServerRepository,
     private val userRepository: UserRepository,
     private val permissionsRepository: PermissionsRepository,
+    private val adsRepository: AdsRepository,
     val vpnService: MyVpnTunnel,
     private val dataStore: DataStore<Preferences>,
     private val resourceProvider: ResourceProvider
@@ -45,6 +47,9 @@ class HomeViewModel(
     private val _isAllGranted = MutableStateFlow<Boolean?>(null)
     val isAllGranted = _isAllGranted.asStateFlow()
 
+    private val _showPermissionsRequest = MutableStateFlow(false)
+    val showPermissionsRequest = _showPermissionsRequest.asStateFlow()
+
     init {
         CoroutineScope(Dispatchers.IO).launch {
             _servers.emit(serverRepository.getServersFromDataStore())
@@ -54,6 +59,11 @@ class HomeViewModel(
                 )
             )
             updateIsAllGranted()
+            _showPermissionsRequest.emit(
+                adsRepository.showAds(
+                    DeviceUtils.getAndroidID(resourceProvider.context)
+                )
+            )
         }
     }
 

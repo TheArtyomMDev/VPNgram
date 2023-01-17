@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.tracker.MyTracker
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.ResourceProvider
@@ -42,12 +41,35 @@ class SplashScreenViewModel(
             try {
                 val prefs = dataStore.data.first()
                 if (prefs[Constants.IS_REGISTERED] != true) {
-                    servers.emit(
-                        userRepository.registerNewUser(
-                            DeviceUtils.getAndroidID(resourceProvider.context)
-                        )
-                    )
+
+                    var registered = false
                     dataStore.edit { it[Constants.IS_REGISTERED] = true }
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.data.collect {
+                            if(!registered && it.contains(Constants.REFERRER_ID)) {
+                                when(it[Constants.REFERRER_ID]) {
+                                    "", null -> {
+                                        servers.emit(
+                                            userRepository.registerNewUser(
+                                                DeviceUtils.getAndroidID(resourceProvider.context)
+                                            )
+                                        )
+                                    }
+                                    else -> {
+                                        servers.emit(
+                                            userRepository.registerRefUser(
+                                                deviceId = DeviceUtils.getAndroidID(resourceProvider.context),
+                                                referrerId = it[Constants.REFERRER_ID]!!
+                                            )
+                                        )
+                                    }
+                                }
+                                registered = true
+                            }
+                        }
+                    }
+
                 } else {
                     servers.emit(
                         serverRepository.getServersFromApi(
@@ -60,8 +82,6 @@ class SplashScreenViewModel(
                 _splashScreenState.emit(SplashScreenState.Error)
             }
         }
-
-        MyTracker.
 
         viewModelScope.launch {
             _isAllGranted.emit(permissionsRepository.checkAllPermissionsGranted())

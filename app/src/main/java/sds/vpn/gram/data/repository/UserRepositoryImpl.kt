@@ -35,6 +35,20 @@ class UserRepositoryImpl(
         return servers
     }
 
+    @SuppressLint("SimpleDateFormat")
+    override suspend fun registerRefUser(deviceId: String, referrerId: String): List<Server> {
+        return try {
+            api.registerRefUser(
+                deviceId = deviceId,
+                referrerId = referrerId,
+                dateRegistration = SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis())
+            ).body()!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+            listOf()
+        }
+    }
+
     override suspend fun getTrafficLimit(deviceId: String): GetTrafficLimitResponse {
         return try {
             val trafficLimitResponse = api.getTrafficLimit(deviceId).body()!!
@@ -64,6 +78,15 @@ class UserRepositoryImpl(
             ).body()!!
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    override suspend fun getCode(deviceId: String): String {
+        return try {
+            api.getCode(deviceId).body()!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
         }
     }
 }

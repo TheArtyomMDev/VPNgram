@@ -55,6 +55,7 @@ fun HomeScreen(
     val lastUsedServer by vm.lastUsedServer.collectAsState(Server("", "", "", 80, ""))
     var chosenServer by remember { mutableStateOf(vm.getChosenServer()) }
     val isAllGranted by vm.isAllGranted.collectAsState()
+    val showPermissionRequest by vm.showPermissionsRequest.collectAsState()
     var openDialog by remember { mutableStateOf(true) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -85,7 +86,7 @@ fun HomeScreen(
     val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
 
-    if(isAllGranted == false && openDialog) {
+    if(isAllGranted == false && openDialog && showPermissionRequest) {
         Dialog(onDismissRequest = {}) {
             PermissionsScreen {
                 openDialog = false

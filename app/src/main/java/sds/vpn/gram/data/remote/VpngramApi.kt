@@ -3,6 +3,7 @@ package sds.vpn.gram.data.remote
 import retrofit2.Response
 import retrofit2.http.*
 import sds.vpn.gram.data.remote.dto.*
+import sds.vpn.gram.domain.model.Server
 
 interface VpngramApi {
 
@@ -12,6 +13,19 @@ interface VpngramApi {
         @Query("date_registration") dateRegistration: String,
         @Query("os") os: String = "Android"
     ): Response<List<ServerDto>>
+
+    @POST("/mobile/reg_ref_user")
+    suspend fun registerRefUser(
+        @Query("device_id") deviceId: String,
+        @Query("date_registration") dateRegistration: String,
+        @Query("os") os: String = "Android",
+        @Query("referrer_id") referrerId: String
+    ): Response<List<Server>>
+
+    @POST("/mobile/get_datos")
+    suspend fun getCode(
+        @Query("device_id") deviceId: String,
+    ): Response<String>
 
     @POST("/mobile/get_servers")
     suspend fun getServers(
@@ -45,4 +59,9 @@ interface VpngramApi {
     suspend fun getAds(
         @Query("device_id") deviceId: String,
     ): Response<Map<String, String>>
+
+    @POST("/mobile/get_ads_flag")
+    suspend fun getAdsFlag(
+        @Query("device_id") deviceId: String,
+    ): Response<String>
 }
