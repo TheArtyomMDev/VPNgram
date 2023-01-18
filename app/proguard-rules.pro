@@ -50,5 +50,7 @@
 
 -keep class sds.vpn.gram.domain.model.** { *; }
 -keep class sds.vpn.gram.data.remote.dto.** { *; }
+-keepclasseswithmembers sds.vpn.gram.common.MyVpnTunnel
+
 
 -adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
