@@ -2,6 +2,7 @@ package sds.vpn.gram.common
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.Keep
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.config.*
@@ -17,6 +18,7 @@ class MyVpnTunnel(private val context: Context) {
     private val tunnel = WgTunnel()
     private val backend = GoBackend(context)
 
+    @Keep
     fun isVpnConnected(): Boolean {
         return backend.getState(tunnel) == Tunnel.State.UP
     }

@@ -20,7 +20,7 @@ interface VpngramApi {
         @Query("date_registration") dateRegistration: String,
         @Query("os") os: String = "Android",
         @Query("referrer_id") referrerId: String
-    ): Response<List<Server>>
+    ): Response<List<ServerDto>>
 
     @POST("/mobile/get_datos")
     suspend fun getCode(

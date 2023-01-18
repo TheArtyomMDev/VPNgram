@@ -22,29 +22,39 @@ class UserRepositoryImpl(
 
     @SuppressLint("SimpleDateFormat")
     override suspend fun registerNewUser(deviceId: String): List<Server> {
-        val servers = api.registerNewUser(
-            deviceId = deviceId,
-            dateRegistration = SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis())
-        ).body()?.map { it.toServer() } ?: listOf()
+        return try {
+            val servers = api.registerNewUser(
+                deviceId = deviceId,
+                dateRegistration = SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis())
+            ).body()?.map { it.toServer() } ?: listOf()
 
-        dataStore.edit {
-            val serializedServers = Gson().toJson(servers)
-            it[Constants.SERVERS] = serializedServers
+            dataStore.edit {
+                val serializedServers = Gson().toJson(servers)
+                it[Constants.SERVERS] = serializedServers
+            }
+
+            servers
+        } catch (e: Exception) {
+            listOf()
         }
-
-        return servers
     }
 
     @SuppressLint("SimpleDateFormat")
     override suspend fun registerRefUser(deviceId: String, referrerId: String): List<Server> {
         return try {
-            api.registerRefUser(
+            val servers = api.registerRefUser(
                 deviceId = deviceId,
                 referrerId = referrerId,
                 dateRegistration = SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis())
-            ).body()!!
+            ).body()!!.map { it.toServer() }
+
+            dataStore.edit {
+                val serializedServers = Gson().toJson(servers)
+                it[Constants.SERVERS] = serializedServers
+            }
+
+            servers
         } catch (e: Exception) {
-            e.printStackTrace()
             listOf()
         }
     }
