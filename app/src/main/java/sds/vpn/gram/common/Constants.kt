@@ -9,6 +9,7 @@ object Constants {
 
     // Api keys
     const val APP_METRICA_API_KEY = "f90e20ca-de0b-41f1-be79-11c84a71ba05"
+    const val ONESIGNAL_API_KEY = "a47de32d-5e5f-43f4-94e6-97e1edad855e"
 
     // DataStore
     val IS_REGISTERED = booleanPreferencesKey("IS_REGISTERED")

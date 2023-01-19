@@ -117,6 +117,9 @@ dependencies {
     // App Metrica
     implementation 'com.yandex.android:mobmetricalib:5.2.0'
 
+    // OneSignal
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+
     // OTHER
     // ____________________________
 

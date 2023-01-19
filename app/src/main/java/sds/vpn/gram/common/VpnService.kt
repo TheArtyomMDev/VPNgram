@@ -47,8 +47,6 @@ class VpnService : Service() {
             adsCode = userRepository.getCode(
                 DeviceUtils.getAndroidID(context)
             )
-            println("ADS CODE")
-            println(adsCode)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
