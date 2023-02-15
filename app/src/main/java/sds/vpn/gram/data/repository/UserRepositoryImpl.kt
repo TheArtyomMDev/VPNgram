@@ -9,12 +9,11 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.first
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.data.remote.VpngramApi
-import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.data.remote.dto.toServer
+import sds.vpn.gram.data.remote.dto.toTrafficLimit
 import sds.vpn.gram.domain.model.Server
 import sds.vpn.gram.domain.model.TrafficLimit
 import sds.vpn.gram.domain.model.TrafficType
-import sds.vpn.gram.domain.model.toTrafficLimit
 import sds.vpn.gram.domain.repository.UserRepository
 import java.text.SimpleDateFormat
 
