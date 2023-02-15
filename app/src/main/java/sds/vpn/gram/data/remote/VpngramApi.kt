@@ -3,7 +3,6 @@ package sds.vpn.gram.data.remote
 import retrofit2.Response
 import retrofit2.http.*
 import sds.vpn.gram.data.remote.dto.*
-import sds.vpn.gram.domain.model.Server
 
 interface VpngramApi {
 
@@ -35,13 +34,13 @@ interface VpngramApi {
     @POST("/mobile/get_traffic_limit")
     suspend fun getTrafficLimit(
         @Query("device_id") deviceId: String,
-    ): Response<GetTrafficLimitResponse>
+    ): Response<TrafficLimitDto>
 
     @POST("/mobile/get_vpn_config")
     suspend fun getVpnConfig(
         @Query("device_id") deviceId: String,
         @Query("server_id") serverId: String,
-    ): Response<GetVpnConfigResponse>
+    ): Response<VpnConfigDto>
 
     @POST("/mobile/check_traffic")
     suspend fun getTrafficSpent(

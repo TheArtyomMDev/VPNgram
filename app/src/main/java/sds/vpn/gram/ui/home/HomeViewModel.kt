@@ -19,7 +19,7 @@ import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.MyVpnTunnel
 import sds.vpn.gram.common.ResourceProvider
-import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
+import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.domain.model.Server
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.PermissionsRepository
@@ -41,7 +41,7 @@ class HomeViewModel(
     private val _servers = MutableStateFlow<List<Server>>(listOf())
     val servers = _servers.asStateFlow()
 
-    private val _trafficLimitResponse = MutableStateFlow(GetTrafficLimitResponse(0.0, 0.0))
+    private val _trafficLimitResponse = MutableStateFlow(TrafficLimitDto(0.0, 0.0))
     val trafficLimitResponse = _trafficLimitResponse.asStateFlow()
 
     private val _isAllGranted = MutableStateFlow<Boolean?>(null)

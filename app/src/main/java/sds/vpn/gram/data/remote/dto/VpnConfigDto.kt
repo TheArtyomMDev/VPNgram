@@ -2,7 +2,7 @@ package sds.vpn.gram.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class GetVpnConfigResponse(
+data class VpnConfigDto(
     @SerializedName("InterfacePublicKey")
     val interfacePublicKey: String,
 

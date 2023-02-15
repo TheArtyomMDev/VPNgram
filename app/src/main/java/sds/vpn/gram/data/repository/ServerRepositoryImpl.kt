@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.NetworkUtils
 import sds.vpn.gram.data.remote.VpngramApi
-import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
+import sds.vpn.gram.data.remote.dto.VpnConfigDto
 import sds.vpn.gram.data.remote.dto.toServer
 import sds.vpn.gram.domain.model.Server
 import sds.vpn.gram.domain.repository.ServerRepository
@@ -82,14 +82,14 @@ class ServerRepositoryImpl(
         }
     }
 
-    override suspend fun getVpnConfig(deviceId: String, server: Server): GetVpnConfigResponse {
+    override suspend fun getVpnConfig(deviceId: String, server: Server): VpnConfigDto {
         return try {
             dataStore.edit {
                 it[Constants.LAST_SERVER] = Gson().toJson(server)
             }
             api.getVpnConfig(deviceId, server.serverId).body()!!
         } catch (e: Exception) {
-            GetVpnConfigResponse("", "", "", "", 0)
+            VpnConfigDto("", "", "", "", 0)
         }
     }
 

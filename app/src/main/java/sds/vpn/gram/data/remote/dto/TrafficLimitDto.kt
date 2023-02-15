@@ -2,9 +2,9 @@ package sds.vpn.gram.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class GetTrafficLimitResponse(
+data class TrafficLimitDto(
     @SerializedName("traffic_limit")
-    val trafficLimit: Double,
+    val trafficLimit: String,
 
     @SerializedName("spended_traffic")
     val trafficSpent: Double

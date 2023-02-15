@@ -11,14 +11,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import org.koin.android.ext.android.inject
 import sds.vpn.gram.R
-import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
+import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
 import sds.vpn.gram.ui.MainActivity
-import sds.vpn.gram.ui.WebViewActivity
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 
 class VpnService : Service() {
@@ -35,7 +32,7 @@ class VpnService : Service() {
         val context = applicationContext
         var ads = mapOf<String, String>()
         var adsCode = ""
-        var traffic = GetTrafficLimitResponse(0.0, 0.0)
+        var traffic = TrafficLimitDto(0.0, 0.0)
 
         CoroutineScope(Dispatchers.IO).launch {
             ads = adsRepository.getAds(

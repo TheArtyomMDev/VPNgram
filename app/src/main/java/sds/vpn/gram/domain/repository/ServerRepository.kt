@@ -1,7 +1,7 @@
 package sds.vpn.gram.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
+import sds.vpn.gram.data.remote.dto.VpnConfigDto
 import sds.vpn.gram.domain.model.Server
 
 interface ServerRepository {
@@ -10,7 +10,7 @@ interface ServerRepository {
 
     suspend fun getServersFromDataStore(): List<Server>
 
-    suspend fun getVpnConfig(deviceId: String, server: Server): GetVpnConfigResponse
+    suspend fun getVpnConfig(deviceId: String, server: Server): VpnConfigDto
 
     suspend fun disconnect(deviceId: String, serverId: String): Double
 

@@ -9,9 +9,12 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.first
 import sds.vpn.gram.common.Constants
 import sds.vpn.gram.data.remote.VpngramApi
-import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
+import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.data.remote.dto.toServer
 import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.domain.model.TrafficLimit
+import sds.vpn.gram.domain.model.TrafficType
+import sds.vpn.gram.domain.model.toTrafficLimit
 import sds.vpn.gram.domain.repository.UserRepository
 import java.text.SimpleDateFormat
 
@@ -26,7 +29,7 @@ class UserRepositoryImpl(
             val servers = api.registerNewUser(
                 deviceId = deviceId,
                 dateRegistration = SimpleDateFormat("dd-MM-yyyy").format(System.currentTimeMillis())
-            ).body()?.map { it.toServer() } ?: listOf()
+            ).body()!!.map { it.toServer() }
 
             dataStore.edit {
                 val serializedServers = Gson().toJson(servers)
@@ -59,7 +62,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getTrafficLimit(deviceId: String): GetTrafficLimitResponse {
+    override suspend fun getTrafficLimit(deviceId: String): TrafficLimit {
         return try {
             val trafficLimitResponse = api.getTrafficLimit(deviceId).body()!!
 
@@ -67,15 +70,15 @@ class UserRepositoryImpl(
                 it[Constants.TRAFFIC_LIMIT] = Gson().toJson(trafficLimitResponse)
             }
 
-            trafficLimitResponse
+            trafficLimitResponse.toTrafficLimit()
         } catch(e: Exception) {
             try {
                 val data = dataStore.data.first()[Constants.TRAFFIC_LIMIT]!!
-                val getTrafficLimitResponse = object : TypeToken<GetTrafficLimitResponse>() {}.type
+                val trafficLimit = object : TypeToken<TrafficLimit>() {}.type
 
-                Gson().fromJson(data, getTrafficLimitResponse)
+                Gson().fromJson(data, trafficLimit)
             } catch (e: Exception) {
-                GetTrafficLimitResponse(0.0, 0.0)
+                TrafficLimit(0.0, TrafficType.Free(0.0))
             }
         }
     }

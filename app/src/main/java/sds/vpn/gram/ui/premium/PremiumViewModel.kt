@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.ResourceProvider
-import sds.vpn.gram.data.remote.dto.GetTrafficLimitResponse
+import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.domain.repository.UserRepository
 
 
@@ -17,7 +17,7 @@ class PremiumViewModel(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
-    private val _trafficLimitResponse = MutableStateFlow(GetTrafficLimitResponse(0.0, 0.0))
+    private val _trafficLimitResponse = MutableStateFlow(TrafficLimitDto(0.0, 0.0))
     val trafficLimitResponse = _trafficLimitResponse.asStateFlow()
 
     init {

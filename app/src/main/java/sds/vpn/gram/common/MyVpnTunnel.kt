@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import sds.vpn.gram.R
-import sds.vpn.gram.data.remote.dto.GetVpnConfigResponse
+import sds.vpn.gram.data.remote.dto.VpnConfigDto
 import sds.vpn.gram.domain.model.Server
 import java.net.InetAddress
 
@@ -33,7 +33,7 @@ class MyVpnTunnel(private val context: Context) {
         }
     }
 
-    fun connectVpn(server: Server, serverConfig: GetVpnConfigResponse) = try {
+    fun connectVpn(server: Server, serverConfig: VpnConfigDto) = try {
         val interfaceBuilder = Interface.Builder()
         val peerBuilder = Peer.Builder()
 
