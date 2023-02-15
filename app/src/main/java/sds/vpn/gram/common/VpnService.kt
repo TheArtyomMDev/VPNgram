@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.first
 import org.koin.android.ext.android.inject
 import sds.vpn.gram.R
 import sds.vpn.gram.data.remote.dto.TrafficLimitDto
+import sds.vpn.gram.domain.model.TrafficLimit
+import sds.vpn.gram.domain.model.TrafficType
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
@@ -32,7 +34,7 @@ class VpnService : Service() {
         val context = applicationContext
         var ads = mapOf<String, String>()
         var adsCode = ""
-        var traffic = TrafficLimitDto(0.0, 0.0)
+        var traffic = TrafficLimit(0.0, TrafficType.Unlimited)
 
         CoroutineScope(Dispatchers.IO).launch {
             ads = adsRepository.getAds(

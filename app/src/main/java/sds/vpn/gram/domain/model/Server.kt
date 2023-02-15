@@ -1,5 +1,6 @@
 package sds.vpn.gram.domain.model
 
+import java.io.Serializable
 
 data class Server(
     val serverId: String,
@@ -8,9 +9,9 @@ data class Server(
     val port: Int = 80,
     val imageUrl: String,
     var ping: Long = 0,
-): java.io.Serializable {
+): Serializable {
     override fun equals(other: Any?): Boolean {
-        return if(other is Server) {
+        return if (other is Server) {
             other.serverId == serverId
                     && other.country == country
                     && other.IP == IP
@@ -18,4 +19,5 @@ data class Server(
                     && other.imageUrl == imageUrl
         } else false
     }
+
 }
