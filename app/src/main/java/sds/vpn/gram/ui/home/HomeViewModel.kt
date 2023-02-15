@@ -15,12 +15,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import sds.vpn.gram.common.Constants
-import sds.vpn.gram.common.DeviceUtils
-import sds.vpn.gram.common.MyVpnTunnel
-import sds.vpn.gram.common.ResourceProvider
+import sds.vpn.gram.common.*
 import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.domain.model.TrafficLimit
+import sds.vpn.gram.domain.model.TrafficType
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.PermissionsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
@@ -41,7 +40,7 @@ class HomeViewModel(
     private val _servers = MutableStateFlow<List<Server>>(listOf())
     val servers = _servers.asStateFlow()
 
-    private val _trafficLimitResponse = MutableStateFlow(TrafficLimitDto(0.0, 0.0))
+    private val _trafficLimitResponse = MutableStateFlow(TrafficLimit(0.0, TrafficType.Free(0.0)))
     val trafficLimitResponse = _trafficLimitResponse.asStateFlow()
 
     private val _isAllGranted = MutableStateFlow<Boolean?>(null)
@@ -72,7 +71,10 @@ class HomeViewModel(
             val chosenServerSerialized = dataStore.data.first()[Constants.CHOSEN_SERVER]
             val serverType = object : TypeToken<Server>() {}.type
 
-            Gson().fromJson(chosenServerSerialized, serverType)
+            val server: Server = Gson().fromJson(chosenServerSerialized, serverType)
+            server.ping = NetworkUtils.ping(server.IP, server.port)
+
+            server
         } catch (e: Exception) {
             Server("", "", "", 80, "")
         }

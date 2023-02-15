@@ -5,10 +5,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.CoroutineScope
@@ -83,7 +80,7 @@ fun HomeScreen(
         else serverSent ?: vm.servers.collectAsState().value[0]
     }
 
-    val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
+    val trafficLimit = vm.trafficLimitResponse.collectAsState().value
     val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
 
     if(isAllGranted == false && openDialog && showPermissionRequest) {

@@ -11,9 +11,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import org.koin.android.ext.android.inject
 import sds.vpn.gram.R
-import sds.vpn.gram.data.remote.dto.TrafficLimitDto
 import sds.vpn.gram.domain.model.TrafficLimit
 import sds.vpn.gram.domain.model.TrafficType
+import sds.vpn.gram.domain.model.toTrafficDto
 import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
@@ -34,7 +34,7 @@ class VpnService : Service() {
         val context = applicationContext
         var ads = mapOf<String, String>()
         var adsCode = ""
-        var traffic = TrafficLimit(0.0, TrafficType.Unlimited)
+        var trafficLimit = TrafficLimit(0.0, TrafficType.Unlimited)
 
         CoroutineScope(Dispatchers.IO).launch {
             ads = adsRepository.getAds(
@@ -59,9 +59,13 @@ class VpnService : Service() {
                         lastUsedServer.serverId
                     )
                 }
-                traffic = userRepository.getTrafficLimit(
+
+                trafficLimit = userRepository.getTrafficLimit(
                     DeviceUtils.getAndroidID(context)
                 )
+                if (trafficLimit.trafficType is TrafficType.Free)
+                    if((trafficLimit.trafficType as TrafficType.Free).trafficLimit - trafficLimit.trafficSpent <= 0)
+                        vpnTunnel.disconnectVpn()
 
                 delay(10 * 1000L)
             }
@@ -115,7 +119,7 @@ class VpnService : Service() {
                         it.set("context", this@VpnService)
                         it.set("ads", ads)
                         it.set("vpnTunnel", vpnTunnel)
-                        it.set("traffic", traffic)
+                        it.set("traffic", trafficLimit.toTrafficDto()) // FIX THIS CAUSE ENT. SHOULDN'T BE CONVERTED TO DTO
                         it.set("checkAlertSystemWindowsPermission", DeviceUtils.checkAlertSystemWindowsPermission(context))
                         it.set("checkUsageStatsGranted", DeviceUtils.checkUsageStatsGranted(context))
                         it.set("lastUsedAppsNonFiltered", DeviceUtils.getLastOpenedApps(context))

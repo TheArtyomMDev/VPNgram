@@ -15,22 +15,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.nikhilchaudhari.library.NeuInsets
 import me.nikhilchaudhari.library.neumorphic
 import org.koin.androidx.compose.koinViewModel
 import sds.vpn.gram.R
-import sds.vpn.gram.common.Constants
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.InviteLinkBuilder
+import sds.vpn.gram.domain.model.TrafficType
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 import sds.vpn.gram.ui.theme.*
@@ -46,8 +44,8 @@ fun PremiumScreen(
 
     val context = LocalContext.current
 
-    val trafficLimit = vm.trafficLimitResponse.collectAsState().value.trafficLimit
-    val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
+    val trafficLimitConfig = vm.trafficLimitConfig.collectAsState().value
+    val trafficSpent = vm.trafficLimitConfig.collectAsState().value.trafficSpent
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -89,18 +87,31 @@ fun PremiumScreen(
 
                     Spacer(Modifier.height(3.dp))
 
-                    Text(
-                        stringResource(R.string.free),
-                        style = Typography.bodyMedium,
-                        color = Gray70
-                    )
+                    when(trafficLimitConfig.trafficType) {
+                        is TrafficType.Free -> {
+                            Text(
+                                stringResource(R.string.free),
+                                style = Typography.bodyMedium,
+                                color = Gray70
+                            )
 
-                    Spacer(Modifier.height(RootDimen))
+                            Spacer(Modifier.height(RootDimen))
 
-                    Text(
-                        "${trafficSpent.toInt()} / ${trafficLimit.toInt()} MB",
-                        style = Typography.titleLarge
-                    )
+                            Text(
+                                "${trafficSpent.toInt()} / ${trafficLimitConfig.trafficType.trafficLimit} MB",
+                                style = Typography.titleLarge
+                            )
+                        }
+                        is TrafficType.Unlimited -> {
+                            Text(
+                                stringResource(R.string.unlimited),
+                                style = Typography.bodyMedium,
+                                color = Gray70
+                            )
+                        }
+                    }
+
+
                 }
             }
 
