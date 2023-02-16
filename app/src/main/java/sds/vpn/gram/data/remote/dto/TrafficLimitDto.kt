@@ -13,7 +13,7 @@ data class TrafficLimitDto(
 )
 
 fun TrafficLimitDto.toTrafficLimit(): TrafficLimit {
-    return if (this.trafficLimit.contains("unlimited"))
+    return if (this.trafficLimit.contains("Unlimited"))
         TrafficLimit(
             this.trafficSpent,
             TrafficType.Unlimited

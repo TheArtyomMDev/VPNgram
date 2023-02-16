@@ -1,0 +1,17 @@
+Index: app/src/main/java/sds/vpn/gram/data/remote/dto/GetTrafficLimitResponse.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package sds.vpn.gram.data.remote.dto\r\n\r\nimport com.google.gson.annotations.SerializedName\r\n\r\ndata class GetTrafficLimitResponse(\r\n    @SerializedName(\"traffic_limit\")\r\n    val trafficLimit: Double,\r\n\r\n    @SerializedName(\"spended_traffic\")\r\n    val trafficSpent: Double\r\n)\r\n
+===================================================================
+diff --git a/app/src/main/java/sds/vpn/gram/data/remote/dto/GetTrafficLimitResponse.kt b/app/src/main/java/sds/vpn/gram/data/remote/dto/GetTrafficLimitResponse.kt
+--- a/app/src/main/java/sds/vpn/gram/data/remote/dto/GetTrafficLimitResponse.kt	
++++ b/app/src/main/java/sds/vpn/gram/data/remote/dto/GetTrafficLimitResponse.kt	
+@@ -4,7 +4,7 @@
+ 
+ data class GetTrafficLimitResponse(
+     @SerializedName("traffic_limit")
+-    val trafficLimit: Double,
++    val trafficLimit: String,
+ 
+     @SerializedName("spended_traffic")
+     val trafficSpent: Double

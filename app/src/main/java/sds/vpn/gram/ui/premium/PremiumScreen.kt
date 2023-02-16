@@ -156,61 +156,62 @@ fun PremiumScreen(
         }
 
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Box(
-                modifier = boxModifier
+        if(trafficLimitConfig.trafficType is TrafficType.Free)
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(RootDimen)
+                Box(
+                    modifier = boxModifier
                 ) {
-                    Text(stringResource(R.string.unlimited), style = Typography.bodyMedium, color = Gray70)
+                    Column(
+                        modifier = Modifier
+                            .padding(RootDimen)
+                    ) {
+                        Text(stringResource(R.string.unlimited), style = Typography.bodyMedium, color = Gray70)
 
-                    Spacer(Modifier.height(5.dp))
+                        Spacer(Modifier.height(5.dp))
 
+                        Text(
+                            "250 руб / мес",
+                            style = Typography.titleMedium,
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(MediumDimen))
+
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = RootDimen)
+                        .neumorphic(
+                            neuShape = punchedSmallShape,
+                            lightShadowColor = Gray90,
+                            darkShadowColor = Color.LightGray,
+                            elevation = 5.dp,
+                            strokeWidth = 5.dp,
+                            neuInsets = NeuInsets(5.dp, 5.dp)
+                        )
+                        .clip(shape = roundedSmallShape)
+                ) {
+                    Image(
+                        imageVector = ImageVector.vectorResource(R.drawable.subscribe_background),
+                        contentDescription = "subscribe",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
                     Text(
-                        "250 руб / мес",
-                        style = Typography.titleMedium,
+                        stringResource(R.string.subscribe),
+                        style = Typography.bodyMedium,
+                        color = Color.White,
+                        modifier = Modifier
+                            .align(Alignment.Center)
                     )
                 }
+
+                Spacer(Modifier.height(1.7*RootDimen))
             }
-
-            Spacer(Modifier.height(MediumDimen))
-
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = RootDimen)
-                    .neumorphic(
-                        neuShape = punchedSmallShape,
-                        lightShadowColor = Gray90,
-                        darkShadowColor = Color.LightGray,
-                        elevation = 5.dp,
-                        strokeWidth = 5.dp,
-                        neuInsets = NeuInsets(5.dp, 5.dp)
-                    )
-                    .clip(shape = roundedSmallShape)
-            ) {
-                Image(
-                    imageVector = ImageVector.vectorResource(R.drawable.subscribe_background),
-                    contentDescription = "subscribe",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                Text(
-                    stringResource(R.string.subscribe),
-                    style = Typography.bodyMedium,
-                    color = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
-            }
-
-            Spacer(Modifier.height(1.7*RootDimen))
-        }
     }
 }
