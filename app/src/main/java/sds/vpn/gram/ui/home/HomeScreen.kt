@@ -28,6 +28,7 @@ import me.nikhilchaudhari.library.shapes.Punched
 import org.koin.androidx.compose.koinViewModel
 import sds.vpn.gram.R
 import sds.vpn.gram.domain.model.Server
+import sds.vpn.gram.domain.model.TrafficType
 import sds.vpn.gram.ui.destinations.CountriesScreenDestination
 import sds.vpn.gram.ui.destinations.PremiumScreenDestination
 import sds.vpn.gram.ui.home.components.ProgressBar
@@ -80,8 +81,7 @@ fun HomeScreen(
         else serverSent ?: vm.servers.collectAsState().value[0]
     }
 
-    val trafficLimit = vm.trafficLimitResponse.collectAsState().value
-    val trafficSpent = vm.trafficLimitResponse.collectAsState().value.trafficSpent
+    val trafficConfig = vm.trafficLimitResponse.collectAsState().value
 
     if(isAllGranted == false && openDialog && showPermissionRequest) {
         Dialog(onDismissRequest = {}) {
@@ -123,15 +123,27 @@ fun HomeScreen(
                     isConnected = it
 
                     if (isConnected!!) {
-                        if(trafficLimit - trafficSpent > 0) {
-                            val intentSender = vm.vpnService.getVpnPrepareIntent()
+                        when(trafficConfig.trafficType) {
+                            is TrafficType.Unlimited -> {
+                                val intentSender = vm.vpnService.getVpnPrepareIntent()
 
-                            if (intentSender != null) {
-                                vm.setChosenServer(chosenServer)
-                                launcher.launch(intentSender)
-                            } else vm.connectToServer(chosenServer)
-                        } else {
-                            navigator.navigate(PremiumScreenDestination)
+                                if (intentSender != null) {
+                                    vm.setChosenServer(chosenServer)
+                                    launcher.launch(intentSender)
+                                } else vm.connectToServer(chosenServer)
+
+                            }
+                            is TrafficType.Free -> {
+                                if (trafficConfig.trafficType.trafficLimit - trafficConfig.trafficSpent > 0) {
+                                    val intentSender = vm.vpnService.getVpnPrepareIntent()
+
+                                    if (intentSender != null) {
+                                        vm.setChosenServer(chosenServer)
+                                        launcher.launch(intentSender)
+                                    } else vm.connectToServer(chosenServer)
+                                }
+                                else navigator.navigate(PremiumScreenDestination)
+                            }
                         }
                     }
                     else {
@@ -159,22 +171,24 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(RootDimen)
         ) {
-            Text(
-                "${trafficSpent.toInt()} / ${trafficLimit.toInt()} MB",
-                style = Typography.bodyMedium
-            )
+            if(trafficConfig.trafficType is TrafficType.Free) {
+                Text(
+                    "${trafficConfig.trafficType.trafficLimit.toInt()} / ${trafficConfig.trafficSpent.toInt()} MB",
+                    style = Typography.bodyMedium
+                )
 
-            Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
 
-            ProgressBar(
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(8.dp))
-                    .height(10.dp),
-                backgroundColor = Color.White,
-                foregroundColor =
+                ProgressBar(
+                    modifier = Modifier
+                        .clip(shape = RoundedCornerShape(8.dp))
+                        .height(10.dp),
+                    backgroundColor = Color.White,
+                    foregroundColor =
                     Brush.horizontalGradient(listOf(Orange50, Purple50)),
-                progress = (trafficSpent / trafficLimit).toFloat()
-            )
+                    progress = (trafficConfig.trafficSpent / trafficConfig.trafficType.trafficLimit).toFloat()
+                )
+            }
 
             Spacer(Modifier.height(30.dp))
 
@@ -218,3 +232,4 @@ fun HomeScreen(
         }
     }
 }
+
