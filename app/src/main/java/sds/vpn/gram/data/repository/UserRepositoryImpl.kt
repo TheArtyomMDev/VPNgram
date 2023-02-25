@@ -101,4 +101,34 @@ class UserRepositoryImpl(
             ""
         }
     }
+
+    override suspend fun getInviteText(deviceId: String): String {
+        return try {
+            val response = api.getLinks(deviceId).body()!!
+
+            response.inviteText + "\n" + response.inviteLink
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
+    override suspend fun getPaymentLink(deviceId: String): String {
+        return try {
+            val response = api.getLinks(deviceId).body()!!
+
+            response.paymentLink
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
+    override suspend fun getCost(): String {
+        return try {
+            api.getCost().body()!!
+        } catch (e: Exception) {
+            "Cost loading..."
+        }
+    }
 }

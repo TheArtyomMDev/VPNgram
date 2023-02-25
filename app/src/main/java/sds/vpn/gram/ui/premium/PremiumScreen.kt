@@ -2,6 +2,7 @@ package sds.vpn.gram.ui.premium
 
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
+import android.content.Intent.ACTION_VIEW
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import sds.vpn.gram.R
 import sds.vpn.gram.common.DeviceUtils
 import sds.vpn.gram.common.InviteLinkBuilder
 import sds.vpn.gram.domain.model.TrafficType
+import sds.vpn.gram.ui.WebViewActivity
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
 import sds.vpn.gram.ui.theme.*
@@ -46,6 +48,9 @@ fun PremiumScreen(
 
     val trafficLimitConfig = vm.trafficLimitConfig.collectAsState().value
     val trafficSpent = vm.trafficLimitConfig.collectAsState().value.trafficSpent
+    val inviteLink by vm.inviteLinkFlow.collectAsState()
+    val paymentLink by vm.paymentLinkFlow.collectAsState()
+    val cost by vm.costFlow.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -129,13 +134,19 @@ fun PremiumScreen(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
-                            val inviteBuilder = InviteLinkBuilder()
-                            inviteBuilder.setAndroidId(DeviceUtils.getAndroidID(context))
+
+//                            val inviteBuilder = InviteLinkBuilder()
+//                            inviteBuilder.setAndroidId(DeviceUtils.getAndroidID(context))
 
                             val sendLinkIntent = Intent(ACTION_SEND)
                             sendLinkIntent.type = "text/plain"
-                            sendLinkIntent.putExtra(Intent.EXTRA_TEXT, inviteBuilder.build())
-                            context.startActivity(Intent.createChooser(sendLinkIntent, "Share link"))
+                            sendLinkIntent.putExtra(Intent.EXTRA_TEXT, inviteLink)
+                            context.startActivity(
+                                Intent.createChooser(
+                                    sendLinkIntent,
+                                    "Share link"
+                                )
+                            )
                         }
                 ) {
                     Image(
@@ -155,7 +166,6 @@ fun PremiumScreen(
             }
         }
 
-
         if(trafficLimitConfig.trafficType is TrafficType.Free)
             Column(
                 modifier = Modifier
@@ -174,7 +184,7 @@ fun PremiumScreen(
                         Spacer(Modifier.height(5.dp))
 
                         Text(
-                            "250 руб / мес",
+                            cost,
                             style = Typography.titleMedium,
                         )
                     }
@@ -194,6 +204,15 @@ fun PremiumScreen(
                             neuInsets = NeuInsets(5.dp, 5.dp)
                         )
                         .clip(shape = roundedSmallShape)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            val intent = Intent(context, WebViewActivity::class.java)
+                            intent.putExtra("url", paymentLink)
+
+                            context.startActivity(intent)
+                        }
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(R.drawable.subscribe_background),

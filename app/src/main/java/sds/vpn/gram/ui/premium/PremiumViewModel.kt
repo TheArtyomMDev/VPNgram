@@ -21,6 +21,15 @@ class PremiumViewModel(
     private val _trafficLimitConfig = MutableStateFlow(TrafficLimit(0.0, TrafficType.Free(0.0)))
     val trafficLimitConfig = _trafficLimitConfig.asStateFlow()
 
+    private val _inviteLinkFlow = MutableStateFlow("")
+    val inviteLinkFlow = _inviteLinkFlow.asStateFlow()
+
+    private val _paymentLinkFlow = MutableStateFlow("")
+    val paymentLinkFlow = _paymentLinkFlow.asStateFlow()
+
+    private val _costFlow = MutableStateFlow("")
+    val costFlow = _costFlow.asStateFlow()
+
     init {
         CoroutineScope(Dispatchers.IO).launch {
             _trafficLimitConfig.emit(
@@ -29,5 +38,29 @@ class PremiumViewModel(
                 )
             )
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            _inviteLinkFlow.emit(
+                userRepository.getInviteText(
+                    DeviceUtils.getAndroidID(resourceProvider.context)
+                )
+            )
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            _paymentLinkFlow.emit(
+                userRepository.getPaymentLink(
+                    DeviceUtils.getAndroidID(resourceProvider.context)
+                )
+            )
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            _costFlow.emit(
+                userRepository.getCost()
+            )
+        }
     }
+
+
 }

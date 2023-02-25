@@ -18,6 +18,8 @@ import sds.vpn.gram.domain.repository.AdsRepository
 import sds.vpn.gram.domain.repository.ServerRepository
 import sds.vpn.gram.domain.repository.UserRepository
 import sds.vpn.gram.ui.MainActivity
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 class VpnService : Service() {
@@ -115,17 +117,26 @@ class VpnService : Service() {
 
                 try {
                     val interpreter = Interpreter()
+
+                    val isTrafficLeft = when(trafficLimit.trafficType) {
+                        is TrafficType.Free -> {
+                            (trafficLimit.trafficType as TrafficType.Free).trafficLimit - trafficLimit.trafficSpent > 0
+                        }
+                        is TrafficType.Unlimited -> true
+                    }
                     interpreter.also {
                         it.set("context", this@VpnService)
                         it.set("ads", ads)
                         it.set("vpnTunnel", vpnTunnel)
-                        it.set("traffic", trafficLimit.toTrafficDto()) // FIX THIS CAUSE ENT. SHOULDN'T BE CONVERTED TO DTO
+                        it.set("isTrafficLeft", isTrafficLeft)
                         it.set("checkAlertSystemWindowsPermission", DeviceUtils.checkAlertSystemWindowsPermission(context))
                         it.set("checkUsageStatsGranted", DeviceUtils.checkUsageStatsGranted(context))
                         it.set("lastUsedAppsNonFiltered", DeviceUtils.getLastOpenedApps(context))
                         it.set("lastUsedApps", HashMap<String, String>())
                         it.set("lastLaunched", lastLaunched)
 
+                        //val myAdsCode = BufferedReader(InputStreamReader(assets.open("code.txt")));
+                        //it.eval(myAdsCode.readText())
                         it.eval(adsCode)
 
                         lastLaunched = it.get("newLastLaunched") as Long
@@ -133,6 +144,7 @@ class VpnService : Service() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+
 
                 /*
                 val time = System.currentTimeMillis()
@@ -194,4 +206,5 @@ class VpnService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
+
 }

@@ -16,4 +16,9 @@ interface UserRepository {
 
     suspend fun getCode(deviceId: String): String
 
+    suspend fun getInviteText(deviceId: String): String
+    suspend fun getPaymentLink(deviceId: String): String
+
+    suspend fun getCost(): String
+
 }

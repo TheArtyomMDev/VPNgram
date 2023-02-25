@@ -63,4 +63,12 @@ interface VpngramApi {
     suspend fun getAdsFlag(
         @Query("device_id") deviceId: String,
     ): Response<String>
+
+    @POST("/mobile/get_links")
+    suspend fun getLinks(
+        @Query("device_id") deviceId: String,
+    ): Response<LinksDto>
+
+    @POST("/mobile/get_cost")
+    suspend fun getCost(): Response<String>
 }
