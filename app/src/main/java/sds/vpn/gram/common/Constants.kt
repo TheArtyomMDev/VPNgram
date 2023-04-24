@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object Constants {
     // Links
-    const val API_URL = "http://176.99.11.213:8090/"
+    const val API_URL = "https://vpngram.pro/"
 
     // Api keys
     const val APP_METRICA_API_KEY = "f90e20ca-de0b-41f1-be79-11c84a71ba05"

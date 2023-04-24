@@ -8,6 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ import sds.vpn.gram.domain.model.TrafficType
 import sds.vpn.gram.ui.WebViewActivity
 import sds.vpn.gram.ui.home.components.TopBar
 import sds.vpn.gram.ui.hometabs.HomeTabsNavGraph
+import sds.vpn.gram.ui.premium.components.TermsText
 import sds.vpn.gram.ui.theme.*
 
 
@@ -228,6 +231,30 @@ fun PremiumScreen(
                         modifier = Modifier
                             .align(Alignment.Center)
                     )
+                }
+
+                Spacer(Modifier.height(MediumDimen))
+
+                Box(
+                    modifier = boxModifier
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(RootDimen)
+                    ) {
+                        val terms = mapOf(
+                            "Условия подписки" to "https://vpngram.pro/SubscriptionTerms.html",
+                            "Условия использования" to "https://vpngram.pro/TermsofUse.html",
+                            "Политика конфиденциальности" to "https://vpngram.pro/PrivacyPolicy.html",
+                        )
+
+                        terms.forEach {
+                            Spacer(Modifier.height(2.dp))
+                            TermsText(it.key, it.value)
+                            Spacer(Modifier.height(2.dp))
+                        }
+
+                    }
                 }
 
                 Spacer(Modifier.height(1.7*RootDimen))

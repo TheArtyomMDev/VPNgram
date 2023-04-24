@@ -16,7 +16,7 @@ fun TrafficLimitDto.toTrafficLimit(): TrafficLimit {
     return if (this.trafficLimit.contains("Unlimited"))
         TrafficLimit(
             this.trafficSpent,
-            TrafficType.Free(100.0)
+            TrafficType.Unlimited
         )
 
     else TrafficLimit(
