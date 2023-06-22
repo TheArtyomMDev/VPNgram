@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">VPNgram</string>
+    <string name="app_name" translatable="false">GuardVPN</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="ms">MS</string>

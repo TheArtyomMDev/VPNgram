@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'sds.vpn.gram'
+    namespace 'sds.guardvpn'
     compileSdk 33
 
     defaultConfig {
-        applicationId "sds.vpn.gram"
+        applicationId "sds.guardvpn"
         minSdk 21
         targetSdk 33
         versionCode 4
@@ -24,8 +24,8 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {

@@ -48,8 +48,8 @@
 
 -keep class com.google.gson.stream.** { *; }
 
--keep class sds.vpn.gram.domain.model.** { *; }
--keep class sds.vpn.gram.data.remote.dto.** { *; }
+-keep class sds.guardvpn.domain.model.** { *; }
+-keep class sds.guardvpn.data.remote.dto.** { *; }
 
 
 -adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
