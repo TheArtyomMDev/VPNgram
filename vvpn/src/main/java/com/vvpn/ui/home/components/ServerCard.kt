@@ -1,6 +1,7 @@
 package com.vvpn.ui.home.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -17,16 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.vvpn.R
 import com.vvpn.domain.model.Server
+import com.vvpn.ui.theme.Black10
 import com.vvpn.ui.theme.Gray20
 import com.vvpn.ui.theme.Gray40
 import com.vvpn.ui.theme.RootDimen
@@ -45,7 +49,8 @@ fun ServerCard(
     val isPressed = interactionSource.collectIsPressedAsState().value
 
     Box(
-        modifier = (if(isPressed) modifierPressed else modifier)
+        modifier = (if (isPressed) modifierPressed else modifier)
+            .background(Black10)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
@@ -67,11 +72,18 @@ fun ServerCard(
                     .padding(10.dp)
             )
 
-            Text(server.country, style = Typography.bodyMedium, color = Gray20)
+            Text(server.country, style = Typography.bodyMedium, color = Color.White)
 
             Spacer(Modifier.weight(1f))
 
-            Text("${server.ping} ${stringResource(R.string.ms)}", style = Typography.bodyMedium, color = Gray40)
+            Text(
+                "${stringResource(R.string.speed)} ${server.ping} ${stringResource(R.string.ms)}",
+                style = Typography.bodySmall,
+                color = Color.White,
+                modifier = Modifier
+                    .width(90.dp),
+                textAlign = TextAlign.End
+            )
 
             Spacer(Modifier.width(20.dp))
 

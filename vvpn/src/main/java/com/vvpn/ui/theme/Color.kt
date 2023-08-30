@@ -22,3 +22,5 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 val PurpleGrey40 = Color(0xFF625b71)
 
 val Red50 = Color(0xFFDB0000)
+
+val Black10 = Color(0xFF1B1B1B)

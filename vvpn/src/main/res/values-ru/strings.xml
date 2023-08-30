@@ -2,7 +2,7 @@
 <resources>
     <string name="connected">Подключено</string>
     <string name="disconnected">Отключено</string>
-    <string name="ms">МС</string>
+    <string name="ms">миллисекунд(ы)</string>
     <string name="subscribe">Оформить подписку</string>
     <string name="everyday_usage">Ежедневное использование</string>
     <string name="free">Бесплатно</string>
@@ -16,4 +16,5 @@
     <string name="not_granted">Не предоставлено</string>
     <string name="spent">Израсходовано</string>
     <string name="available">Доступный лимит</string>
+    <string name="speed">Скорость</string>
 </resources>

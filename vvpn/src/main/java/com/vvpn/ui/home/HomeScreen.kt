@@ -46,6 +46,9 @@ import com.vvpn.ui.destinations.CountriesScreenDestination
 import com.vvpn.ui.destinations.PremiumScreenDestination
 import com.vvpn.ui.theme.Orange40
 import com.vvpn.ui.theme.Red50
+import com.vvpn.ui.theme.pressedSmallShape
+import com.vvpn.ui.theme.punchedSmallShape
+import com.vvpn.ui.theme.roundedSmallShape
 
 
 @HomeTabsNavGraph(start = true)
@@ -214,22 +217,22 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .height(70.dp)
                 .neumorphic(
-                    neuShape = Punched.Rounded(radius = 48.dp),
+                    neuShape = punchedSmallShape,
                     lightShadowColor = Gray90,
                     darkShadowColor = Color.LightGray,
                     elevation = 16.dp,
                     strokeWidth = 5.dp,
                     neuInsets = NeuInsets(10.dp, 12.dp)
                 )
-                .clip(shape = RoundedCornerShape(48.dp))
+                .clip(shape = roundedSmallShape)
                 .background(Gray80)
 
             val cardModifierPressed = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .clip(shape = RoundedCornerShape(48.dp))
+                .clip(shape = roundedSmallShape)
                 .neumorphic(
-                    neuShape = Pressed.Rounded(radius = 48.dp),
+                    neuShape = pressedSmallShape,
                     lightShadowColor = Gray90,
                     darkShadowColor = Color.LightGray,
                     elevation = 16.dp,

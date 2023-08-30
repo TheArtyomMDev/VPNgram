@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">VVPN</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="ms">MS</string>
+    <string name="ms">milliseconds</string>
     <string name="subscribe">Subscribe</string>
     <string name="everyday_usage">Everyday usage</string>
     <string name="free">Free</string>
@@ -16,4 +16,5 @@
     <string name="not_granted">Not granted</string>
     <string name="spent">Spent</string>
     <string name="available">Available</string>
+    <string name="speed">Ping</string>
 </resources>

@@ -8,14 +8,14 @@ import me.nikhilchaudhari.library.shapes.Punched
 
 val roundedLargeShape = RoundedCornerShape(48.dp)
 val roundedMediumShape = RoundedCornerShape(24.dp)
-val roundedSmallShape = RoundedCornerShape(16.dp)
+val roundedSmallShape = RoundedCornerShape(8.dp)
 val roundedSmallShapeTopCorners = RoundedCornerShape(
-    topStart = 16.dp,
-    topEnd = 16.dp
+    topStart = 8.dp,
+    topEnd = 8.dp
 )
 
 val punchedLargeShape = Punched.Rounded(48.dp)
-val punchedSmallShape = Punched.Rounded(16.dp)
+val punchedSmallShape = Punched.Rounded(8.dp)
 
 val pressedLargeShape = Pressed.Rounded(48.dp)
-val pressedSmallShape = Pressed.Rounded(16.dp)
+val pressedSmallShape = Pressed.Rounded(8.dp)
