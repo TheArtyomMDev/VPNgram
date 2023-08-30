@@ -83,7 +83,7 @@ fun BottomHomeBar(
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(top = barHeight / 3F, bottom = barHeight / 3F)
+                        .padding(top = barHeight / 4F, bottom = barHeight / 4F)
                         .clickable {
                             navigator.navigate(it.destination.baseRoute)
                         }

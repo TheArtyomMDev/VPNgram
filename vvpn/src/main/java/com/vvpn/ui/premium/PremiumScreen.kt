@@ -70,7 +70,7 @@ fun PremiumScreen(
                 neuInsets = NeuInsets(5.dp, 5.dp)
             )
             .clip(shape = roundedSmallShape)
-            .background(Gray80)
+            .background(Black10)
 
         Column(
             modifier = Modifier
@@ -86,12 +86,17 @@ fun PremiumScreen(
 
             Box(
                 modifier = boxModifier
+                    .background(Red50)
             ) {
                 Column(
                     modifier = Modifier
                         .padding(RootDimen)
                 ) {
-                    Text(stringResource(R.string.everyday_usage), style = Typography.bodyLarge)
+                    Text(
+                        stringResource(R.string.everyday_usage),
+                        style = Typography.bodyLarge,
+                        color = Color.White
+                    )
 
                     Spacer(Modifier.height(3.dp))
 
@@ -100,21 +105,22 @@ fun PremiumScreen(
                             Text(
                                 stringResource(R.string.free),
                                 style = Typography.bodyMedium,
-                                color = Gray70
+                                color = Color.White
                             )
 
                             Spacer(Modifier.height(RootDimen))
 
                             Text(
                                 "${trafficSpent.toInt()} / ${trafficLimitConfig.trafficType.trafficLimit} MB",
-                                style = Typography.titleLarge
+                                style = Typography.titleLarge,
+                                color = Color.White
                             )
                         }
                         is TrafficType.Unlimited -> {
                             Text(
                                 stringResource(R.string.unlimited),
                                 style = Typography.bodyMedium,
-                                color = Gray70
+                                color = Color.White
                             )
                         }
                     }
@@ -162,7 +168,11 @@ fun PremiumScreen(
 
                     Spacer(Modifier.weight(1F))
 
-                    Text(stringResource(R.string.invite_friend), style = Typography.bodyMedium, color = Gray20)
+                    Text(
+                        stringResource(R.string.invite_friend),
+                        style = Typography.bodyMedium,
+                        color = Color.White
+                    )
 
                     Spacer(Modifier.weight(1F))
                 }
@@ -182,13 +192,18 @@ fun PremiumScreen(
                         modifier = Modifier
                             .padding(RootDimen)
                     ) {
-                        Text(stringResource(R.string.unlimited), style = Typography.bodyMedium, color = Gray70)
+                        Text(
+                            stringResource(R.string.unlimited),
+                            style = Typography.bodyMedium,
+                            color = Color.White
+                        )
 
                         Spacer(Modifier.height(5.dp))
 
                         Text(
                             cost,
                             style = Typography.titleMedium,
+                            color = Color.White
                         )
                     }
                 }
