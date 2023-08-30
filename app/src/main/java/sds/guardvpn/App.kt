@@ -103,7 +103,10 @@ class App: Application() {
 
                 override fun onError(p0: DeferredDeeplinkParametersListener.Error, p1: String) {
                     println("Error loading deeplink parameters: $p0")
-                    if(p0.toString().contains("PARSE_ERROR"))
+                    if(
+                        p0.toString().contains("PARSE_ERROR")
+                        || p0.toString().contains("NO_REFERRER")
+                        )
                         CoroutineScope(Dispatchers.IO).launch {
                             dataStore.edit { it[Constants.REFERRER_ID] = "" }
                         }
