@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,12 +24,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.nikhilchaudhari.library.NeuInsets
 import me.nikhilchaudhari.library.neumorphic
 import org.koin.androidx.compose.koinViewModel
 import com.vvpn.R
+import com.vvpn.common.Constants
 import com.vvpn.common.DeviceUtils
 import com.vvpn.common.InviteLinkBuilder
 import com.vvpn.domain.model.TrafficType
@@ -37,6 +41,8 @@ import com.vvpn.ui.home.components.TopBar
 import com.vvpn.ui.hometabs.HomeTabsNavGraph
 import com.vvpn.ui.premium.components.TermsText
 import com.vvpn.ui.theme.*
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.get
 
 
 @HomeTabsNavGraph()
@@ -46,6 +52,19 @@ fun PremiumScreen(
     navigator: DestinationsNavigator
 ) {
     val vm: PremiumViewModel = koinViewModel()
+
+    val dataStore = get<DataStore<Preferences>>().data
+    var isDark by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        dataStore.collectLatest { prefs ->
+            prefs[Constants.IS_DARK_THEME]?.let {
+                isDark = it
+            }
+        }
+    }
 
     val context = LocalContext.current
 
@@ -61,16 +80,8 @@ fun PremiumScreen(
         val boxModifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = RootDimen)
-            .neumorphic(
-                neuShape = punchedSmallShape,
-                lightShadowColor = Gray90,
-                darkShadowColor = Color.LightGray,
-                elevation = 5.dp,
-                strokeWidth = 5.dp,
-                neuInsets = NeuInsets(5.dp, 5.dp)
-            )
             .clip(shape = roundedSmallShape)
-            .background(Black10)
+            .background(MaterialTheme.colorScheme.onBackground)
 
         Column(
             modifier = Modifier
@@ -143,10 +154,6 @@ fun PremiumScreen(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
-
-//                            val inviteBuilder = InviteLinkBuilder()
-//                            inviteBuilder.setAndroidId(DeviceUtils.getAndroidID(context))
-
                             val sendLinkIntent = Intent(ACTION_SEND)
                             sendLinkIntent.type = "text/plain"
                             sendLinkIntent.putExtra(Intent.EXTRA_TEXT, inviteLink)
@@ -159,7 +166,8 @@ fun PremiumScreen(
                         }
                 ) {
                     Image(
-                        imageVector = ImageVector.vectorResource(R.drawable.invite_friend),
+                        imageVector = if(isDark) ImageVector.vectorResource(R.drawable.invite_friend_night)
+                        else ImageVector.vectorResource(R.drawable.invite_friend),
                         contentDescription = "invite friend",
                         contentScale = ContentScale.FillHeight,
                         modifier = Modifier
@@ -171,7 +179,7 @@ fun PremiumScreen(
                     Text(
                         stringResource(R.string.invite_friend),
                         style = Typography.bodyMedium,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
 
                     Spacer(Modifier.weight(1F))
@@ -195,7 +203,7 @@ fun PremiumScreen(
                         Text(
                             stringResource(R.string.unlimited),
                             style = Typography.bodyMedium,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.background
                         )
 
                         Spacer(Modifier.height(5.dp))
@@ -203,7 +211,7 @@ fun PremiumScreen(
                         Text(
                             cost,
                             style = Typography.titleMedium,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.background
                         )
                     }
                 }
@@ -213,14 +221,6 @@ fun PremiumScreen(
                 Box(
                     modifier = Modifier
                         .padding(horizontal = RootDimen)
-                        .neumorphic(
-                            neuShape = punchedSmallShape,
-                            lightShadowColor = Gray90,
-                            darkShadowColor = Color.LightGray,
-                            elevation = 5.dp,
-                            strokeWidth = 5.dp,
-                            neuInsets = NeuInsets(5.dp, 5.dp)
-                        )
                         .clip(shape = roundedSmallShape)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -233,7 +233,8 @@ fun PremiumScreen(
                         }
                 ) {
                     Image(
-                        imageVector = ImageVector.vectorResource(R.drawable.subscribe_background),
+                        imageVector = if(isDark) ImageVector.vectorResource(R.drawable.subscribe_background_night)
+                        else ImageVector.vectorResource(R.drawable.subscribe_background),
                         contentDescription = "subscribe",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
@@ -242,7 +243,7 @@ fun PremiumScreen(
                     Text(
                         stringResource(R.string.subscribe),
                         style = Typography.bodyMedium,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.background,
                         modifier = Modifier
                             .align(Alignment.Center)
                     )
