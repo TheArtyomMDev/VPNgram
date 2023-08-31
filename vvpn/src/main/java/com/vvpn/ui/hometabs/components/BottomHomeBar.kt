@@ -16,6 +16,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.navigation.navigateTo
@@ -26,12 +28,15 @@ import com.ramcosta.composedestinations.utils.destination
 import me.nikhilchaudhari.library.NeuInsets
 import me.nikhilchaudhari.library.neumorphic
 import com.vvpn.R
+import com.vvpn.common.Constants
 import com.vvpn.ui.destinations.CountriesScreenDestination
 import com.vvpn.ui.destinations.DirectionDestination
 import com.vvpn.ui.destinations.HomeScreenDestination
 import com.vvpn.ui.destinations.PremiumScreenDestination
 import com.vvpn.ui.splash.DeepLinkArgs
 import com.vvpn.ui.theme.*
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.get
 
 @Composable
 fun BottomHomeBar(
@@ -39,6 +44,19 @@ fun BottomHomeBar(
     modifier: Modifier,
     deepLinkArgs: DeepLinkArgs
 ) {
+    val dataStore = get<DataStore<Preferences>>().data
+    var isDark by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        dataStore.collectLatest { prefs ->
+            prefs[Constants.IS_DARK_THEME]?.let {
+                isDark = it
+            }
+        }
+    }
+
     var barHeight by remember { mutableStateOf(0.dp) }
 
     val localDensity = LocalDensity.current
@@ -58,9 +76,14 @@ fun BottomHomeBar(
                 }
             }
     ) {
-        val items = listOf(
-            BottomHomeBarItem.Home, BottomHomeBarItem.Countries, BottomHomeBarItem.Premium
-        )
+        val items = when(isDark) {
+            true -> listOf(
+                BottomHomeBarItemNight.Home, BottomHomeBarItemNight.Countries, BottomHomeBarItemNight.Premium
+            )
+            false -> listOf(
+                BottomHomeBarItem.Home, BottomHomeBarItem.Countries, BottomHomeBarItem.Premium
+            )
+        }
 
         val currentDestination = navigator.currentBackStackEntryAsState().value?.destination()
 
@@ -98,4 +121,14 @@ sealed class BottomHomeBarItem(
     object Home : BottomHomeBarItem(R.drawable.home_selected, R.drawable.home, HomeScreenDestination)
     object Countries : BottomHomeBarItem(R.drawable.countries_selected, R.drawable.countries, CountriesScreenDestination)
     object Premium : BottomHomeBarItem(R.drawable.premium_selected, R.drawable.premium, PremiumScreenDestination)
+}
+
+sealed class BottomHomeBarItemNight(
+    val icon: Int,
+    val unselectedIcon: Int,
+    val destination: DestinationSpec<*>,
+) {
+    object Home : BottomHomeBarItem(R.drawable.home_selected_night, R.drawable.home_night, HomeScreenDestination)
+    object Countries : BottomHomeBarItem(R.drawable.countries_night, R.drawable.countries_night, CountriesScreenDestination)
+    object Premium : BottomHomeBarItem(R.drawable.premium_selected_night, R.drawable.premium_night, PremiumScreenDestination)
 }
