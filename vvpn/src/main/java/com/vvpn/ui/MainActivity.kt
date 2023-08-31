@@ -10,15 +10,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import com.vvpn.R
+import com.vvpn.common.Constants
 import com.vvpn.common.VpnService
 import com.vvpn.ui.destinations.HomeScreenDestination
 import com.vvpn.ui.destinations.PremiumScreenDestination
@@ -26,6 +34,8 @@ import com.vvpn.ui.destinations.TypedDestination
 import com.vvpn.ui.splash.DeepLinkArgs
 import com.vvpn.ui.theme.Gray80
 import com.vvpn.ui.theme.VPNgramTheme
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.get
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,16 +69,30 @@ fun MainApp(destination: TypedDestination<out Any>?) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Image(
-                imageVector = ImageVector.vectorResource(R.drawable.background),
-                contentDescription = "logo",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .fillMaxSize()
-            )
+            val dataStore = get<DataStore<Preferences>>().data
+            var isDark by remember {
+                mutableStateOf(false)
+            }
+
+            LaunchedEffect(key1 = Unit) {
+                dataStore.collectLatest { prefs ->
+                    prefs[Constants.IS_DARK_THEME]?.let {
+                        isDark = it
+                    }
+                }
+            }
+
+            if(!isDark)
+                Image(
+                    imageVector = ImageVector.vectorResource(R.drawable.background),
+                    contentDescription = "logo",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
 
             rememberSystemUiController().setStatusBarColor(
-                color = Gray80,
+                color = MaterialTheme.colorScheme.background,
             )
 
             DestinationsNavHost(

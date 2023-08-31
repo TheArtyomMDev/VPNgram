@@ -80,7 +80,7 @@ fun PremiumScreen(
             TopBar(
                 modifier = Modifier
                     .height(55.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.Start)
                     .padding(RootDimen)
             )
 
@@ -248,6 +248,7 @@ fun PremiumScreen(
                     )
                 }
 
+                /*
                 Spacer(Modifier.height(MediumDimen))
 
                 Box(
@@ -271,6 +272,7 @@ fun PremiumScreen(
 
                     }
                 }
+                */
 
                 Spacer(Modifier.height(1.7*RootDimen))
             }

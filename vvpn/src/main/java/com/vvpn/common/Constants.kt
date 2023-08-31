@@ -18,5 +18,5 @@ object Constants {
     val LAST_SERVER = stringPreferencesKey("LAST_SERVER")
     val CHOSEN_SERVER = stringPreferencesKey("CHOSEN_SERVER")
     val REFERRER_ID = stringPreferencesKey("referrer_id")
-
+    val IS_DARK_THEME = booleanPreferencesKey("IS_DARK_THEME")
 }

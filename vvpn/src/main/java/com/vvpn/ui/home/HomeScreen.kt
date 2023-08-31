@@ -117,7 +117,7 @@ fun HomeScreen(
         TopBar(
             modifier = Modifier
                 .height(55.dp)
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopStart)
                 .padding(RootDimen)
         )
 
@@ -186,7 +186,7 @@ fun HomeScreen(
             if(trafficConfig.trafficType is TrafficType.Free) {
                 Text(
                     "${stringResource(R.string.available)} ${trafficConfig.trafficType.trafficLimit.toInt()} MB",
-                    style = Typography.bodyMedium,
+                    style = Typography.bodySmall,
                     modifier = Modifier
                         .align(Alignment.End)
                 )
@@ -207,7 +207,7 @@ fun HomeScreen(
 
                 Text(
                     "${stringResource(R.string.spent)} ${trafficConfig.trafficSpent.toInt()} MB",
-                    style = Typography.bodyMedium
+                    style = Typography.bodySmall
                 )
             }
 
@@ -216,14 +216,14 @@ fun HomeScreen(
             val cardModifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .neumorphic(
-                    neuShape = punchedSmallShape,
-                    lightShadowColor = Gray90,
-                    darkShadowColor = Color.LightGray,
-                    elevation = 16.dp,
-                    strokeWidth = 5.dp,
-                    neuInsets = NeuInsets(10.dp, 12.dp)
-                )
+//                .neumorphic(
+//                    neuShape = punchedSmallShape,
+//                    lightShadowColor = Gray90,
+//                    darkShadowColor = Color.LightGray,
+//                    elevation = 16.dp,
+//                    strokeWidth = 5.dp,
+//                    neuInsets = NeuInsets(10.dp, 12.dp)
+//                )
                 .clip(shape = roundedSmallShape)
                 .background(Gray80)
 
@@ -233,11 +233,11 @@ fun HomeScreen(
                 .clip(shape = roundedSmallShape)
                 .neumorphic(
                     neuShape = pressedSmallShape,
-                    lightShadowColor = Gray90,
-                    darkShadowColor = Color.LightGray,
-                    elevation = 16.dp,
-                    strokeWidth = 5.dp,
-                    neuInsets = NeuInsets(10.dp, 12.dp)
+//                    lightShadowColor = Gray90,
+//                    darkShadowColor = Color.LightGray,
+//                    elevation = 16.dp,
+//                    strokeWidth = 5.dp,
+//                    neuInsets = NeuInsets(10.dp, 12.dp)
                 )
                 .background(Gray80)
 

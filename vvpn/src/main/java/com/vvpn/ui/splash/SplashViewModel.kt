@@ -37,6 +37,7 @@ class SplashScreenViewModel(
     val isAllGranted = _isAllGranted.asStateFlow()
 
     init {
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val prefs = dataStore.data.first()

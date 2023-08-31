@@ -1,21 +1,30 @@
 package com.vvpn.ui.splash
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import com.vvpn.R
+import com.vvpn.common.Constants
 import com.vvpn.ui.destinations.HomeTabsScreenDestination
+import com.vvpn.ui.theme.Black10
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.get
 
 
 @RootNavGraph(start = true)
@@ -24,7 +33,6 @@ import com.vvpn.ui.destinations.HomeTabsScreenDestination
 fun SplashScreen(
     navigator: DestinationsNavigator
 ) {
-
     val vm: SplashScreenViewModel = koinViewModel()
 
     val startTime by remember { mutableStateOf(System.currentTimeMillis()) }
@@ -44,8 +52,23 @@ fun SplashScreen(
         }
     }
 
+    val dataStore = get<DataStore<Preferences>>().data
+    var isDark by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        dataStore.collectLatest { prefs ->
+            prefs[Constants.IS_DARK_THEME]?.let {
+                isDark = it
+            }
+        }
+    }
+
+
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,19 +77,14 @@ fun SplashScreen(
                 .width(150.dp)
         ) {
             Image(
-                imageVector = ImageVector.vectorResource(R.drawable.logo),
+                imageVector = if(isDark) ImageVector.vectorResource(R.drawable.logo_night)
+                else ImageVector.vectorResource(R.drawable.logo),
                 contentDescription = "logo",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
             )
-//            Image(
-//                imageVector = ImageVector.vectorResource(R.drawable.app_name),
-//                contentDescription = "app name",
-//                contentScale = ContentScale.FillWidth,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//            )
+
         }
     }
 }

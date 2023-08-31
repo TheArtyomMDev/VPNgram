@@ -39,21 +39,21 @@ fun CountriesScreen(
         TopBar(
             modifier = Modifier
                 .height(55.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.Start)
                 .padding(RootDimen)
         )
 
         val cardModifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
-            .neumorphic(
-                neuShape = punchedSmallShape,
-                lightShadowColor = Gray90,
-                darkShadowColor = Color.LightGray,
-                elevation = 16.dp,
-                strokeWidth = 5.dp,
-                neuInsets = NeuInsets(10.dp, 12.dp)
-            )
+//            .neumorphic(
+//                neuShape = punchedSmallShape,
+//                //lightShadowColor = Gray90,
+//                //darkShadowColor = Color.LightGray,
+//                elevation = 0.dp,
+//                strokeWidth = 0.dp,
+//                neuInsets = NeuInsets(0.dp, 0.dp)
+//            )
             .clip(shape = roundedSmallShape)
             .background(Gray80)
 
@@ -63,11 +63,11 @@ fun CountriesScreen(
             .clip(shape = roundedSmallShape)
             .neumorphic(
                 neuShape = pressedSmallShape,
-                lightShadowColor = Gray90,
-                darkShadowColor = Color.LightGray,
-                elevation = 16.dp,
-                strokeWidth = 5.dp,
-                neuInsets = NeuInsets(10.dp, 12.dp)
+                //lightShadowColor = Gray90,
+                //darkShadowColor = Color.LightGray,
+                //elevation = 16.dp,
+                //strokeWidth = 5.dp,
+                //neuInsets = NeuInsets(10.dp, 12.dp)
             )
             .background(Gray80)
 

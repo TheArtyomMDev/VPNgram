@@ -20,7 +20,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.vvpn.R
+import com.vvpn.common.Constants
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.get
 
 @Composable
 fun Switch(
@@ -45,8 +50,24 @@ fun Switch(
         animationSpec = tween(
             durationMillis = duration,
         ),
-        targetValue = if(isEnabled) (switchWidth - circleWidth - 2*defaultDimen) else 0.dp
+        targetValue = if(isEnabled) (switchWidth - circleWidth - 2*defaultDimen) else 0.dp,
+        label = ""
     )
+
+
+    val dataStore = get<DataStore<Preferences>>().data
+    var isDark by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        dataStore.collectLatest { prefs ->
+            prefs[Constants.IS_DARK_THEME]?.let {
+                isDark = it
+            }
+        }
+    }
+
 
     with(LocalDensity.current) {
         Box(
@@ -73,7 +94,8 @@ fun Switch(
                 targetState = isEnabled,
                 animationSpec = tween(
                     durationMillis = duration,
-                )
+                ),
+                label = ""
             ) { isEnabled ->
                 if (isEnabled)
                     Image(
@@ -85,7 +107,9 @@ fun Switch(
                     )
                 else
                     Image(
-                        imageVector = ImageVector.vectorResource(R.drawable.switch_off),
+                        imageVector =
+                        if(isDark)  ImageVector.vectorResource(R.drawable.switch_off_night)
+                        else ImageVector.vectorResource(R.drawable.switch_off),
                         contentDescription = null,
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
@@ -95,7 +119,8 @@ fun Switch(
 
 
             Image(
-                imageVector = ImageVector.vectorResource(R.drawable.circle_switch),
+                imageVector = if(isDark && !isEnabled)  ImageVector.vectorResource(R.drawable.circle_switch_night)
+                else ImageVector.vectorResource(R.drawable.circle_switch),
                 contentDescription = null,
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier
