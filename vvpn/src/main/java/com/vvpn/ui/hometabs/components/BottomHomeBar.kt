@@ -2,8 +2,10 @@ package com.vvpn.ui.hometabs.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,16 +49,9 @@ fun BottomHomeBar(
 
     Box(
         modifier = modifier
-            .neumorphic(
-                neuShape = punchedSmallShape,
-                lightShadowColor = Gray90,
-                darkShadowColor = Color.White,
-                elevation = 16.dp,
-                strokeWidth = 3.dp,
-                neuInsets = NeuInsets(10.dp, 12.dp)
-            )
             .clip(shape = roundedSmallShapeTopCorners)
-            .background(Gray80)
+            .border(2.dp, MaterialTheme.colorScheme.onBackground, roundedSmallShapeTopCorners)
+            .background(MaterialTheme.colorScheme.background)
             .onSizeChanged {
                 with(localDensity) {
                     barHeight = it.height.toDp()

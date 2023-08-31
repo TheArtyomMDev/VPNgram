@@ -10,8 +10,8 @@ val roundedLargeShape = RoundedCornerShape(48.dp)
 val roundedMediumShape = RoundedCornerShape(24.dp)
 val roundedSmallShape = RoundedCornerShape(8.dp)
 val roundedSmallShapeTopCorners = RoundedCornerShape(
-    topStart = 8.dp,
-    topEnd = 8.dp
+    topStart = 12.dp,
+    topEnd = 12.dp
 )
 
 val punchedLargeShape = Punched.Rounded(48.dp)
